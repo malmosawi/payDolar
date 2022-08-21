@@ -78,7 +78,7 @@
 													<div class="text-center mb-6">
 														<img src="assets/images/brand/logo.png" class="" alt="">
 													</div>
-													<h3>Login mrtdaa</h3>
+													<h3>Login</h3>
 													<p class="text-muted">Sign In to your account</p>
 
                                                     @if ($message = Session::get('error'))
