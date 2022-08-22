@@ -9,6 +9,7 @@ use App\Http\Controllers\CustomersController;
 use App\Http\Controllers\SuppliersController;
 use App\Http\Controllers\SuppliersExpensesController;
 use App\Http\Controllers\SuppliersCatchController;
+use App\Http\Controllers\ExpensesController;
 use App\Http\Controllers\ContractController;
 use App\Http\Controllers\InstallmentPayController;
 /*
@@ -49,6 +50,8 @@ Route::group(['middleware' => 'auth'], function() {
     Route::post('suppliers/store', [SuppliersController::class, 'store'])->name('suppliers.store');
     Route::get('suppliers/{id}/edit', [SuppliersController::class, 'edit'])->name('suppliers.edit');
     Route::post('suppliers/{id}/update', [SuppliersController::class, 'update'])->name('suppliers.update');
+    Route::get('suppliers/destroy', [SuppliersController::class, 'destroy'])->name('suppliers.destroy');
+    
 
     Route::get('suppliersExpenses', [SuppliersExpensesController::class, 'default'])->name('suppliersExpenses.default');
     Route::get('suppliersExpenses/create', [SuppliersExpensesController::class, 'create'])->name('suppliersExpenses.create');
@@ -62,6 +65,13 @@ Route::group(['middleware' => 'auth'], function() {
     Route::post('suppliersCatch/store', [SuppliersCatchController::class, 'store'])->name('suppliersCatch.store');
     Route::get('suppliersCatch/{id}/edit', [SuppliersCatchController::class, 'edit'])->name('suppliersCatch.edit');
     Route::post('suppliersCatch/{id}/update', [SuppliersCatchController::class, 'update'])->name('suppliersCatch.update');
+
+    Route::get('expenses', [ExpensesController::class, 'default'])->name('expenses.default');
+    Route::get('expenses/create', [ExpensesController::class, 'create'])->name('expenses.create');
+    Route::post('expenses/store', [ExpensesController::class, 'store'])->name('expenses.store');
+    Route::get('expenses/{id}/edit', [ExpensesController::class, 'edit'])->name('expenses.edit');
+    Route::post('expenses/{id}/update', [ExpensesController::class, 'update'])->name('expenses.update');
+    Route::get('expenses/destroy', [ExpensesController::class, 'destroy'])->name('expenses.destroy');
 
     Route::get('contract', [ContractController::class, 'default'])->name('contract.default');
     Route::get('contract/create', [ContractController::class, 'create'])->name('contract.create');

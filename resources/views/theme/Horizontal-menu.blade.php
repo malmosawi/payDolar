@@ -5,9 +5,10 @@
       <ul class="horizontalMenu-list">
         <li aria-haspopup="true"><a href="{{url('customers')}}" class="customers"><i class="typcn typcn-arrow-move-outline"></i>الزبائن</a></li>
         <li aria-haspopup="true"><a href="{{url('suppliers')}}" class="suppliers"><i class="typcn typcn-arrow-move-outline"></i>الموردين</a></li>
-        <li aria-haspopup="true"><a href="{{url('suppliers')}}" class="suppliers"><i class="typcn typcn-arrow-move-outline"></i>المصاريف</a></li>
-        <li aria-haspopup="true"><a href="{{url('suppliersExpenses')}}" class="suppliersExpenses"><i class="typcn typcn-arrow-move-outline"></i>الصرف للموردين</a></li>
         <li aria-haspopup="true"><a href="{{url('suppliersCatch')}}" class="suppliersCatch"><i class="typcn typcn-arrow-move-outline"></i>القبض من الموردين</a></li>
+        <li aria-haspopup="true"><a href="{{url('suppliersExpenses')}}" class="suppliersExpenses"><i class="typcn typcn-arrow-move-outline"></i>الصرف للموردين</a></li>
+        <li aria-haspopup="true"><a href="{{url('expenses')}}" class="expenses"><i class="typcn typcn-arrow-move-outline"></i>المصاريف</a></li>
+        
         <li aria-haspopup="true"><a href="{{url('contract')}}" class="contract"><i class="typcn typcn-arrow-move-outline"></i>العقد</a></li>
         <li aria-haspopup="true"><a href="{{url('installmentPay')}}" class="installmentPay"><i class="typcn typcn-arrow-move-outline"></i>التسديد اقساط</a></li>
         
