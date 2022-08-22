@@ -26,9 +26,9 @@
         <div class="col-md-12">
         
             <div class="card">
-                <div class="card-header">
+                <!-- <div class="card-header">
                     <h3 class="mb-0 card-title">تعديل معلومات الزبون</h3>
-                </div>
+                </div> -->
                 <div class="card-body">
 
                     <center>
