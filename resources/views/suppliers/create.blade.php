@@ -26,9 +26,9 @@
         <div class="col-md-12">
         
             <div class="card">
-                <div class="card-header">
+                <!-- <div class="card-header">
                     <h3 class="mb-0 card-title">إضافة معلومات مورد جديد</h3>
-                </div>
+                </div> -->
                 <div class="card-body">
 
                     <center>
@@ -45,13 +45,13 @@
                         </div>
                         @endif
 
-                        @if (count($errors) > 0)
+                        <!-- @if (count($errors) > 0)
                             
                             @foreach($errors->all() as $error)
                             <div class="alert alert-danger mt-0 mb-3"><strong>{{ $error }}</strong></div>
                             @endforeach
                         
-                        @endif
+                        @endif -->
                     </center>
 
                     <form action="{{route('suppliers.store')}}" autocomplete="on" method="post" enctype="multipart/form-data" >                                
@@ -111,6 +111,6 @@
 <script>
     $(".suppliers").addClass("active");
     $(".mainPage").text("الموردين");
-    $(".subPage").text("إضافة مورد");
+    $(".subPage").text("إضافة");
 </script>
 @endsection

@@ -26,9 +26,9 @@
         <div class="col-md-12">
         
             <div class="card">
-                <div class="card-header">
+                <!-- <div class="card-header">
                     <h3 class="mb-0 card-title">إضافة معلومات زبون جديد</h3>
-                </div>
+                </div> -->
                 <div class="card-body">
 
                     <center>
@@ -45,13 +45,13 @@
                         </div>
                         @endif
 
-                        @if (count($errors) > 0)
+                        <!-- @if (count($errors) > 0)
                             
                             @foreach($errors->all() as $error)
                             <div class="alert alert-danger mt-0 mb-3"><strong>{{ $error }}</strong></div>
                             @endforeach
                         
-                        @endif
+                        @endif -->
                     </center>
 
                     <form action="{{route('customers.store')}}" autocomplete="on" method="post" enctype="multipart/form-data" >                                
@@ -60,13 +60,24 @@
                         <div class="row">
 
                             <div class="col-md-6">
-                                <div class="form-group">
+                                <div class="form-group pt-5">
                                     <label class="form-label">الاسم</label>
                                     <input type="text" class="form-control @error('name') is-invalid state-invalid @enderror" name="name" id="name" value="{{ old('name') }}" placeholder="">
                                 </div>
+
+                                <div class="form-group">
+                                    <label class="form-label">العنوان</label>
+                                    <input type="text" class="form-control @error('address') is-invalid state-invalid @enderror" name="address" id="address" value="{{ old('address') }}" placeholder="">
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label">رقم الهاتف</label>
+                                    <input type="text" class="form-control @error('phone') is-invalid state-invalid @enderror" name="phone" id="phone" value="{{ old('phone') }}" placeholder="">
+                                </div>
+
                             </div>
 
-                            <div class="col-md-6">
+                            <!-- <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="form-label">العنوان</label>
                                     <input type="text" class="form-control @error('address') is-invalid state-invalid @enderror" name="address" id="address" value="{{ old('address') }}" placeholder="">
@@ -78,9 +89,20 @@
                                     <label class="form-label">رقم الهاتف</label>
                                     <input type="text" class="form-control @error('phone') is-invalid state-invalid @enderror" name="phone" id="phone" value="{{ old('phone') }}" placeholder="">
                                 </div>
-                            </div>
+                            </div> -->
 
-                            <div class="col-md-6">
+                            <div class="col-xl-6 col-lg-12 col-md-12">
+								<div class="card shadow">
+									<div class="card-header">
+										<h3 class="mb-0 card-title">الصورة الشخصية</h3>
+									</div>
+									<div class="card-body">
+										<input type="file" class="dropify @error('person_image') is-invalid state-invalid @enderror" name="person_image" id="person_image" />
+									</div>
+								</div>
+							</div>
+
+                            <!-- <div class="col-md-6">
                                 <div class="form-group">
                                     <div class="form-label">الصورة الشخصية</div>
                                     <div class="custom-file">
@@ -88,7 +110,7 @@
                                         <label class="custom-file-label">أختر الصورة</label>
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
 
                             <div class="col-md-6">
                                 <div class="form-group">
@@ -118,12 +140,12 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-6">
+                            <!-- <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="form-label">السنة</label>
                                     <input type="text" class="form-control @error('year') is-invalid state-invalid @enderror" name="year" id="year" value="{{ old('year') }}" placeholder="">
                                 </div>
-                            </div>
+                            </div> -->
 
                             <div class="col-md-6">
                                 <div class="form-group">
@@ -161,16 +183,6 @@
                                 </div>
                             </div>
 
-                            <!-- <div class="col-xl-4 col-lg-12 col-md-12">
-								<div class="card shadow">
-									<div class="card-header">
-										<h3 class="mb-0 card-title">File upload</h3>
-									</div>
-									<div class="card-body">
-										<div class="dropify-wrapper"><div class="dropify-message"><span class="file-icon"></span> <p>Drag and drop a file here or click</p><p class="dropify-error">Ooops, something wrong appended.</p></div><div class="dropify-loader"></div><div class="dropify-errors-container"><ul></ul></div><input type="file" class="dropify"><button type="button" class="dropify-clear">Remove</button><div class="dropify-preview"><span class="dropify-render"></span><div class="dropify-infos"><div class="dropify-infos-inner"><p class="dropify-filename"><span class="dropify-filename-inner"></span></p><p class="dropify-infos-message">Drag and drop or click to replace</p></div></div></div></div>
-									</div>
-								</div>
-							</div> -->
                             
                             
                         </div>
@@ -204,6 +216,6 @@
 <script>
     $(".customers").addClass("active");
     $(".mainPage").text("الزبائن");
-    $(".subPage").text("إضافة زبون");
+    $(".subPage").text("إضافة");
 </script>
 @endsection

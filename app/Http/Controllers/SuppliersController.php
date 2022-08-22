@@ -14,7 +14,8 @@ class SuppliersController extends Controller
 {
     public function default()
     {   
-        $suppliers = DB::table('suppliers')->where('id', '<>', null)->orderBy('id', 'DESC')->get();
+        $suppliers = Suppliers::orderBy('id', 'DESC')->get();
+        // $suppliers = DB::table('suppliers')->where('id', '<>', null)->orderBy('id', 'DESC')->get();
         return view('suppliers.default' , ['suppliers'=>$suppliers]);
     }
 
@@ -26,9 +27,9 @@ class SuppliersController extends Controller
     public function store(Request $request)
     {
         $rules = [
-            'name' => ['required', 'regex:/(^([\p{Arabic}a-zA-z0-9 ]+)?$)/u'],
-            'address' => ['required','regex:/(^([\p{Arabic}a-zA-z0-9.,()-\/ ]+)?$)/u'],
-            'phone' => ['required', 'regex:/(^([0-9]+)?$)/u'],
+            'name' => ['required', 'regex:/(^([\p{Arabic}a-zA-z0-9 ]+)?$)/u' , 'max:255'],
+            'address' => ['required','regex:/(^([\p{Arabic}a-zA-z0-9.,()-\/ ]+)?$)/u' , 'max:255'],
+            'phone' => ['required', 'regex:/(^([0-9]+)?$)/u' , 'unique:suppliers' , 'min:11' , 'max:11'],
             // 'person_image' => ['required', 'mimes:jpg,jpeg,png', 'max:2048'],
             // 'mother_name' => ['required', 'regex:/(^([\p{Arabic}a-zA-z0-9.,()-\/ ]+)?$)/u'],
             // 'identification_number' => ['required', 'regex:/(^([\p{Arabic}a-zA-z0-9.,()-\/ ]+)?$)/u'],
@@ -101,7 +102,7 @@ class SuppliersController extends Controller
             // $supplier->card_password = $request->input('card_password');
             // $supplier->phone_council = $request->input('phone_council');
             // $supplier->person_image = $imageName;
-            $supplier->created_at = Auth::user()->username;
+            $supplier->user_created = Auth::user()->username;
             $supplier->save();
 
             $request->session()->flash('success', 'تمت الإضافة بنجاح.');
@@ -120,9 +121,9 @@ class SuppliersController extends Controller
     public function update(Request $request, $id)
     {
         $rules = [
-            'name' => ['required', 'regex:/(^([\p{Arabic}a-zA-z0-9 ]+)?$)/u'],
-            'address' => ['required','regex:/(^([\p{Arabic}a-zA-z0-9.,()-\/ ]+)?$)/u'],
-            'phone' => ['required', 'regex:/(^([0-9]+)?$)/u'],
+            'name' => ['required', 'regex:/(^([\p{Arabic}a-zA-z0-9 ]+)?$)/u' , 'max:255'],
+            'address' => ['required','regex:/(^([\p{Arabic}a-zA-z0-9.,()-\/ ]+)?$)/u' , 'max:255'],
+            'phone' => ['required', 'regex:/(^([0-9]+)?$)/u' , 'min:11' , 'max:11'],
             // 'person_image' => ['nullable', 'mimes:jpg,jpeg,png', 'max:2048'],
             // 'mother_name' => ['required', 'regex:/(^([\p{Arabic}a-zA-z0-9.,()-\/ ]+)?$)/u'],
             // 'identification_number' => ['required', 'regex:/(^([\p{Arabic}a-zA-z0-9.,()-\/ ]+)?$)/u'],
@@ -207,12 +208,28 @@ class SuppliersController extends Controller
             // if($request->file('person_image') !=''){
             //     $supplier->person_image = $imageName;
             // }
-            $supplier->updated_at = Auth::user()->username;
+            $supplier->user_updated = Auth::user()->username;
             $supplier->save();
 
             $request->session()->flash('success', 'تم التعديل بنجاح.');
             return redirect('suppliers');
         }
+        
+    }
+
+    public function destroy(Request $request)
+    {
+        $suppliers =Suppliers::find($request->GET('id'));
+        $suppliers->user_deleted = Auth::user()->username;
+        $suppliers->save();
+        
+        if($suppliers->delete()){
+            $response['data'] = 'success';
+        }else{
+            $response['data'] = 'error';
+        }
+
+        return response()->json($response);
         
     }
 

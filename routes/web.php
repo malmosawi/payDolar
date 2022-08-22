@@ -42,6 +42,7 @@ Route::group(['middleware' => 'auth'], function() {
     Route::post('customers/store', [CustomersController::class, 'store'])->name('customers.store');
     Route::get('customers/{id}/edit', [CustomersController::class, 'edit'])->name('customers.edit');
     Route::post('customers/{id}/update', [CustomersController::class, 'update'])->name('customers.update');
+    Route::get('customers/destroy', [CustomersController::class, 'destroy'])->name('customers.destroy');
 
     Route::get('suppliers', [SuppliersController::class, 'default'])->name('suppliers.default');
     Route::get('suppliers/create', [SuppliersController::class, 'create'])->name('suppliers.create');

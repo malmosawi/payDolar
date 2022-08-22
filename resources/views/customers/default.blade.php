@@ -14,7 +14,7 @@
     <div class="page-header">
         <div class="mr-auto">
             <div class="input-group">
-                <a class="btn btn-primary ml-5 mt-4 mt-sm-0" href="{{ url('customers/create') }}"> إضافة زبون جديد <i class="fe fe-plus ml-1 mt-1"></i></a>
+                <a class="btn btn-primary ml-5 mt-4 mt-sm-0" href="{{ url('customers/create') }}"> إضافة <i class="fe fe-plus ml-1 mt-1"></i></a>
             </div>
         </div>
     </div>
@@ -75,11 +75,18 @@
                                     <td>{{ $customer->address }}</td>
                                     <td>{{ $customer->phone }}</td>
                                     <!-- <td>{{ $customer->mother_name }}</td> -->
-                                    <td><img src='{{asset("assets/person_image/$customer->person_image")}}' class="rounded mx-auto d-block" width="100" height="100"></td>
+                                    <td>
+                                        @if($customer->person_image =="" || $customer->person_image == null)
+                                            <img src='{{asset("assets/images/users/user.png")}}' class="rounded mx-auto d-block" width="100" height="100">
+                                        @else
+                                            <img src='{{asset("assets/person_image/$customer->person_image")}}' class="rounded mx-auto d-block" width="100" height="100">
+                                        @endif
+                                    </td>
+
                                     <td>
                                         
                                         <a href='{{url("customers/$customer->id/edit")}}' class="btn btn-success" data-toggle="tooltip" data-placement="top" data-original-title="تعديل"><i class="si si-pencil text-dark"></i></a>
-                                        <a href='{{url("customers/$customer->id/edit")}}' class="btn btn-danger" data-toggle="tooltip" data-placement="top" data-original-title="حذف"><i class="si si-trash text-light"></i></a>
+                                        <a data-id="{{ $customer->id }}" class="btn btn-danger delete_at" data-toggle="tooltip" data-placement="top" data-original-title="حذف"><i class="si si-trash text-light"></i></a>
                                             
                                     </td>
                                 </tr>
@@ -109,5 +116,60 @@
     $(".customers").addClass("active");
     $(".mainPage").text("الزبائن");
     $(".subPage").text("");
+
+    $(document).ready(function() {
+
+        $(document).on("click", ".delete_at", function(event) {
+            // alert("hh");
+            var productId = $(this).data("id");
+            Swal({
+                title: 'هل انت متأكد؟',
+                text: "في حالة تأكيد الحذف لن تتمكن من استرجاع الملف المحذوف",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                cancelButtonText: 'الغاء',
+                width: '400px',
+                confirmButtonText: 'نعم ,اريد الحذف !'
+            }).then((result) => {
+                if (result.value) {
+                    
+                    $.ajax({
+                        type: "POST",
+                        url: "{{ url('customers/destroy')}}",
+                        method:"get",//web page
+                        data:{'id':productId},
+                        success: function(response) {
+                            
+                            if(response.data=="success"){
+                                Swal.fire({
+                                    html: '<b>تم الحذف.</b>',
+                                    showConfirmButton: false,
+                                    type: 'success',
+                                    width: '400px'
+                                });  
+                            }else{
+                                Swal.fire({
+                                    html: '<b>لم يتم الحذف.</b>',
+                                    showConfirmButton: false,
+                                    type: 'error',
+                                    width: '400px'
+                                });
+                            }//else
+                            
+                            setTimeout('window.open(\'{{url("customers/")}}\',\'_self\')', 2000);
+                        } //success
+                    });
+                } //if
+
+            }); //then
+
+        event.preventDefault();
+
+        }); //delete_product
+
+    }); //document
+
 </script>
 @endsection

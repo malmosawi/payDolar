@@ -45,13 +45,13 @@
                         </div>
                         @endif
 
-                        @if (count($errors) > 0)
+                        <!-- @if (count($errors) > 0)
                             
                             @foreach($errors->all() as $error)
                             <div class="alert alert-danger mt-0 mb-3"><strong>{{ $error }}</strong></div>
                             @endforeach
                         
-                        @endif
+                        @endif -->
                     </center>
                     @foreach($customers as $key=>$customer)
 
@@ -60,14 +60,36 @@
 
                         <div class="row">
 
-                            <div class="col-md-6">
+                            <div class="col-md-6 pt-5">
                                 <div class="form-group">
                                     <label class="form-label">الاسم</label>
                                     <input type="text" class="form-control @error('name') is-invalid state-invalid @enderror" name="name" id="name" value="{{ old('name')!=''? old('name') : $customer->name }}" placeholder="">
                                 </div>
+
+                                <div class="form-group">
+                                    <label class="form-label">العنوان</label>
+                                    <input type="text" class="form-control @error('address') is-invalid state-invalid @enderror" name="address" id="address" value="{{ old('address')!=''? old('address') : $customer->address }}" placeholder="">
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label">رقم الهاتف</label>
+                                    <input type="text" class="form-control @error('phone') is-invalid state-invalid @enderror" name="phone" id="phone" value="{{ old('phone')!=''? old('phone') : $customer->phone }}" placeholder="">
+                                </div>
+
                             </div>
 
                             <div class="col-md-6">
+								<div class="card shadow">
+									<div class="card-header">
+										<h3 class="mb-0 card-title">الصورة الشخصية</h3>
+									</div>
+									<div class="card-body">
+										<input type="file" class="dropify @error('person_image') is-invalid state-invalid @enderror" name="person_image" id="person_image" />
+									</div>
+								</div>
+							</div>
+
+                            <!-- <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="form-label">العنوان</label>
                                     <input type="text" class="form-control @error('address') is-invalid state-invalid @enderror" name="address" id="address" value="{{ old('address')!=''? old('address') : $customer->address }}" placeholder="">
@@ -79,9 +101,9 @@
                                     <label class="form-label">رقم الهاتف</label>
                                     <input type="text" class="form-control @error('phone') is-invalid state-invalid @enderror" name="phone" id="phone" value="{{ old('phone')!=''? old('phone') : $customer->phone }}" placeholder="">
                                 </div>
-                            </div>
+                            </div> -->
 
-                            <div class="col-md-6">
+                            <!-- <div class="col-md-6">
                                 <div class="form-group">
                                     <div class="form-label">الصورة الشخصية</div>
                                     <div class="custom-file">
@@ -89,7 +111,7 @@
                                         <label class="custom-file-label">أختر الصورة</label>
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
 
                             <div class="col-md-6">
                                 <div class="form-group">
@@ -119,12 +141,12 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-6">
+                            <!-- <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="form-label">السنة</label>
                                     <input type="text" class="form-control @error('year') is-invalid state-invalid @enderror" name="year" id="year" value="{{ old('year')!=''? old('year') : $customer->year }}" placeholder="">
                                 </div>
-                            </div>
+                            </div> -->
 
                             <div class="col-md-6">
                                 <div class="form-group">
@@ -205,6 +227,6 @@
 <script>
     $(".customers").addClass("active");
     $(".mainPage").text("الزبائن");
-    $(".subPage").text("تحديث معلومات الزبون");
+    $(".subPage").text("تعديل");
 </script>
 @endsection

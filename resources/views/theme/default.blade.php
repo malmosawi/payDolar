@@ -60,6 +60,11 @@
         <link href="{{asset('assets/plugins/fileuploads/css/dropify.css')}}" rel="stylesheet" type="text/css" />
 
 		<link href="{{asset('assets/tail.select-default.css')}}" rel="stylesheet" type="text/css">
+
+		<!---Sweetalert Css-->
+		<!-- <link href="{{asset('assets/plugins/sweet-alert/jquery.sweet-modal.min.css')}}" rel="stylesheet" />
+		<link href="{{asset('assets/plugins/sweet-alert/sweetalert.css')}}" rel="stylesheet" /> -->
+
 		<style>
 			.tail-select .select-dropdown ul li.dropdown-option {
             text-align:right;
@@ -233,8 +238,8 @@
 		<script src="{{asset('assets/plugins/sidebar/sidebar.js')}}"></script>
 
 		<!-- File uploads js -->
-		<script src="{{asset('assets/assets/plugins/fileuploads/js/dropify.js')}}"></script>
-		<script src="{{asset('assets/assets/plugins/fileuploads/js/dropify-demo.js')}}"></script>
+		<script src="{{asset('assets/plugins/fileuploads/js/dropify.js')}}"></script>
+		<script src="{{asset('assets/plugins/fileuploads/js/dropify-demo.js')}}"></script>
 
 
 		<!-- Charts js-->
@@ -264,6 +269,14 @@
 		<script src="{{asset('assets/plugins/flatpickr/custom-flatpickr.js')}}"></script>
 
 		<script src="{{asset('assets/tail.select.min.js')}}"></script>
+
+		<!-- Sweet alert js-->
+		<!-- <script src="{{asset('assets/plugins/sweet-alert/jquery.sweet-modal.min.js')}}"></script>
+		<script src="{{asset('assets/plugins/sweet-alert/sweetalert.min.js')}}"></script>
+		<script src="{{asset('assets/js/sweet-alert.js')}}"></script> -->
+		<script src="{{asset('assets/sweetalerts/sweetalert2.min.js')}}"></script>
+		<script src="{{asset('assets/sweetalerts/custom-sweetalert.js')}}"></script>
+
 		<!-- Custom js-->
 		<script src="{{asset('assets/js/custom.js')}}"></script>
 		<script>
