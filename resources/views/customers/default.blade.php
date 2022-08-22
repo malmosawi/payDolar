@@ -25,9 +25,9 @@
     <div class="row">
         <div class="col-md-12 col-lg-12">
             <div class="card">
-                <div class="card-header">
+                <!-- <div class="card-header">
                     <div class="card-title">جدول معلومات الزبائن</div>
-                </div>
+                </div> -->
                 <div class="card-body">
                     <center>
                         @if(session()->has('success'))
@@ -60,7 +60,7 @@
                                     <th class="wd-20p">الاسم</th>
                                     <th class="wd-5p">العنوان</th>
                                     <th class="wd-5p">رقم الهاتف</th>
-                                    <th class="wd-10p">اسم الام</th>
+                                    <!-- <th class="wd-10p">اسم الام</th> -->
                                     <th class="wd-30p">الصورة الشخصية</th>
                                     <th class="wd-10p">التحكم</th>
                                 </tr>
@@ -74,7 +74,7 @@
                                     <td>{{ $customer->name }}</td>
                                     <td>{{ $customer->address }}</td>
                                     <td>{{ $customer->phone }}</td>
-                                    <td>{{ $customer->mother_name }}</td>
+                                    <!-- <td>{{ $customer->mother_name }}</td> -->
                                     <td><img src='{{asset("assets/person_image/$customer->person_image")}}' class="rounded mx-auto d-block" width="100" height="100"></td>
                                     <td>
                                         
