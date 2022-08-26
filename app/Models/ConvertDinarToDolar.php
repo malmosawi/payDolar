@@ -6,15 +6,15 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 
-class SuppliersExpenses extends Model
+class ConvertDinarToDolar extends Model
 {
     use SoftDeletes;
     
-    protected $table = 'suppliers_expenses';
+    protected $table = 'convertdinartodolar';
     public $timestamps = true;
 
     protected $fillable = [
-        'id_suppliers', 'money', 'exchange_rate', 'date',
+        'money_dolar', 'money_dinar', 'exchange_rate', 'date'
     ];
 
     

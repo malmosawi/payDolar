@@ -55,32 +55,62 @@
                     </center>
 
                     @foreach($suppliersExpensess as $key=>$supplierExpensess)
-                    <form action="{{route('suppliersExpenses.update', $supplierExpensess->id)}}" autocomplete="on" method="post" enctype="multipart/form-data" >                                
+                    <form action="{{route('suppliersExpenses.update', ['id' => $supplierExpensess->id, 'old_money' => $supplierExpensess->money] )}}" autocomplete="on" method="post" enctype="multipart/form-data" >                                
                     @csrf
 
                         <div class="row">
 
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <label class="form-label">اسم المورد</label>
                                     <select id="single" name="name" class="form-control @error('name') is-invalid state-invalid @enderror">
                                 
-                                        @foreach($suppliers as $key=>$supplier)
+                                    @foreach($suppliers as $key=>$supplier)
                                         
-                                            @if(old('name')=='')
-                                                <option <?php if($supplierExpensess->id==$supplier->id) echo "selected"; ?> data-name="{{$supplier->name}}" value="{{$supplier->id}}">{{$supplier->name}}</option>
-                                            @else 
-                                                <option <?php if(old('name')==$supplier->id) echo "selected"; ?> data-name="{{$supplier->name}}" value="{{$supplier->id}}">{{$supplier->name}}</option>
-                                            @endif
-                                        @endforeach
+                                        @if(old('name')=='')
+                                            <option <?php if($supplierExpensess->id_suppliers==$supplier->id) echo "selected"; ?> value="{{$supplier->id}}">{{$supplier->name}}</option>
+                                        @else 
+                                            <option <?php if(old('name')==$supplier->id) echo "selected"; ?> value="{{$supplier->id}}">{{$supplier->name}}</option>
+                                        @endif
+                                    @endforeach
 
                                     </select>
                                 </div>
                             </div>
 
+                            <?php
+                                $money_from = DB::table('suppliers_catch')->where([['id_suppliers', '=', $supplierExpensess->id_suppliers ] , ['deleted_at' , '=' , null ]])->sum('money');
+                                $money_to = DB::table('suppliers_expenses')->where([['id_suppliers', '=', $supplierExpensess->id_suppliers ] , ['deleted_at' , '=' , null ]])->sum('money');
+                                
+                            ?>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="form-label">المبلغ المستلم من المورد(بالدولار)</label>
+                                    <input type="text" readonly class="form-control @error('money_from') is-invalid state-invalid @enderror" name="money_from" id="money_from" value="{{ $money_from }}" placeholder="">
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="form-label">المبلغ المسلم الى المورد(بالدولار)</label>
+                                    <input type="text" readonly class="form-control @error('money_to') is-invalid state-invalid @enderror" name="money_to" id="money_to" value="{{ $money_to }}" placeholder="">
+                                </div>
+                            </div>
+
+                            <?php
+                                $money_setting = DB::table('setting')->where('id', '=', 1 )->sum('dolar_box');
+                            ?>
+
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label class="form-label">المبلغ</label>
+                                    <label class="form-label">صندوق الدولار</label>
+                                    <input type="text" readonly class="form-control @error('dolar_box') is-invalid state-invalid @enderror" name="dolar_box" id="dolar_box" value="{{ $money_setting }}" placeholder="">
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label">ايداء مبلغ للمورد(بالدولار)</label>
                                     <input type="text" class="form-control @error('money') is-invalid state-invalid @enderror" name="money" id="money" value="{{ old('money')!=''? old('money') : $supplierExpensess->money }}" placeholder="">
                                 </div>
                             </div>
@@ -132,6 +162,21 @@
     $(".suppliersExpenses").addClass("active");
     $(".mainPage").text("الصرف للموردين");
     $(".subPage").text("تعديل");
+
+    $(document).ready(function() {
+    
+        $("#dolar_box").val(numberWithCommas($("#dolar_box").val() ));
+
+        $("#exchange_rate").val(numberWithCommas($("#exchange_rate").val() ));
+        $("#money_from").val(numberWithCommas($("#money_from").val() ));
+        $("#money_to").val(numberWithCommas($("#money_to").val() ));
+        $("#money").val(numberWithCommas($("#money").val() ));
+        
+        $('#money').on("change" , function(){
+            $("#money").val(numberWithCommas($("#money").val() ));
+        });
+
+    });
 </script>
 @endsection
 

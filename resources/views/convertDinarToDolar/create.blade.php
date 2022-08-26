@@ -27,7 +27,7 @@
         
             <div class="card">
                 <!-- <div class="card-header">
-                    <h3 class="mb-0 card-title">وصل العقد</h3>
+                    <h3 class="mb-0 card-title">دفتر حساب صرف المبلغ للمورد</h3>
                 </div> -->
                 <div class="card-body">
 
@@ -54,39 +54,17 @@
                         @endif -->
                     </center>
 
-                    <form action="{{route('contract.store')}}" autocomplete="on" method="post" enctype="multipart/form-data" >                                
+                    <form action="{{route('convertDinarToDolar.store')}}" autocomplete="on" method="post" enctype="multipart/form-data" >                                
                     @csrf
 
                         <div class="row">
-
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label class="form-label">اسم الزبون</label>
-                                    <select id="single" name="name" class="form-control @error('name') is-invalid state-invalid @enderror">
-                                
-                                        @foreach($customers as $key=>$customer)
-                                        
-                                            <option <?php if(old('name')==$customer->id) echo "selected"; ?> data-name="{{$customer->name}}" value="{{$customer->id}}">{{$customer->name}}</option>
-                                            
-                                        @endforeach
-
-                                    </select>
-                                </div>
-                            </div>
-
+                            
                             <?php
                                 $dolar_box = DB::table('setting')->where('id', '=', 1 )->sum('dolar_box');
                                 $dinar_box = DB::table('setting')->where('id', '=', 1 )->sum('dinar_box');
                             ?>
 
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label class="form-label">صندوق الدولار</label>
-                                    <input type="text" readonly class="form-control @error('dolar_box') is-invalid state-invalid @enderror" name="dolar_box" id="dolar_box" value="{{ $dolar_box }}" placeholder="">
-                                </div>
-                            </div>
-
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="form-label">صندوق الدينار</label>
                                     <input type="text" readonly class="form-control @error('dinar_box') is-invalid state-invalid @enderror" name="dinar_box" id="dinar_box" value="{{ $dinar_box }}" placeholder="">
@@ -95,36 +73,30 @@
 
                             <div class="col-md-6">
                                 <div class="form-group">
+                                    <label class="form-label">صندوق الدولار</label>
+                                    <input type="text" readonly class="form-control @error('dolar_box') is-invalid state-invalid @enderror" name="dolar_box" id="dolar_box" value="{{ $dolar_box }}" placeholder="">
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label">المبلغ (بالدينار)</label>
+                                    <input type="text" class="form-control @error('money_dinar') is-invalid state-invalid @enderror" name="money_dinar" id="money_dinar" value="{{ old('money_dinar') }}" placeholder="">
+                                </div>
+                            </div>
+                           
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label">سعر الصرف (بالدينار)</label>
+                                    <input type="text" class="form-control @error('exchange_rate') is-invalid state-invalid @enderror" name="exchange_rate" id="exchange_rate" value="{{ old('exchange_rate')!=''? old('exchange_rate') : Session::get('exchange_rate') }}" placeholder="">
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
                                     <label class="form-label">المبلغ (بالدولار)</label>
-                                    <input type="text" class="form-control @error('money') is-invalid state-invalid @enderror" name="money" id="money" value="{{ old('money') }}" placeholder="">
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label class="form-label">عدد اشهر التسديد</label>
-                                    <input type="text" class="form-control @error('months_number') is-invalid state-invalid @enderror" name="months_number" id="months_number" value="{{ old('months_number') }}" placeholder="">
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label class="form-label">مبلغ الدفع كل شهر (بدولار)</label>
-                                    <input type="text" class="form-control @error('money_month') is-invalid state-invalid @enderror" name="money_month" id="money_month" value="{{ old('money_month') }}" placeholder="">
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label class="form-label">سعر الصرف لكل 100 دولار</label>
-                                    <input type="text" readonly class="form-control @error('exchange_rate') is-invalid state-invalid @enderror" name="exchange_rate" id="exchange_rate" value="{{Session::get('exchange_rate')}}" placeholder="">
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label class="form-label">النسبة المضافة (%)</label>
-                                    <input type="text" class="form-control @error('add_rate') is-invalid state-invalid @enderror" name="add_rate" id="add_rate" value="{{Session::get('add_rate')}}" placeholder="">
+                                    <input type="text" readonly class="form-control @error('money_dolar') is-invalid state-invalid @enderror" name="money_dolar" id="money_dolar" value="{{ old('money_dolar') }}" placeholder="">
                                 </div>
                             </div>
 
@@ -164,8 +136,8 @@
 
 @section('script')
 <script>
-    $(".contract").addClass("active");
-    $(".mainPage").text("العقد");
+    $(".convertDinarToDolar").addClass("active");
+    $(".mainPage").text("تحويل الدينار الى دولار");
     $(".subPage").text("إضافة");
 
     $(document).ready(function() {
@@ -174,31 +146,24 @@
 
         $("#dinar_box").val(numberWithCommas($("#dinar_box").val() ));
 
-        $("#money").val(numberWithCommas($("#money").val() ));
+        $("#money_dolar").val(numberWithCommas($("#money_dolar").val() ));
 
-        $("#money_month").val(numberWithCommas($("#money_month").val() ));
+        $("#money_dinar").val(numberWithCommas($("#money_dinar").val() ));
 
         $("#exchange_rate").val(numberWithCommas($("#exchange_rate").val() ));
-
-        $('#months_number,#money').on("change" , function(){
-            $("#money").val(numberWithCommas($("#money").val() ));
-            var money = $('#money').val().replaceAll(",", "");
-            var months_number = $('#months_number').val().replaceAll(",", "");
-            $("#money_month").val(numberWithCommas( (money/months_number) ));
-            
+        
+        $('#money_dinar,#exchange_rate').on("change" , function(){
+            $("#money_dinar").val(numberWithCommas($("#money_dinar").val() ));
+            $("#exchange_rate").val(numberWithCommas($("#exchange_rate").val() ));
+            var money_dinar = $('#money_dinar').val().replaceAll(",", "");
+            var exchange_rate = $('#exchange_rate').val().replaceAll(",", "");
+            $("#money_dolar").val(numberWithCommas( (money_dinar/exchange_rate)*100 ));
         });
 
-        $('#money_month').on("change" , function(){
-
-            // if($('#money').val()!='' && $('#months_number').val()==''){
-                $("#money").val(numberWithCommas($("#money").val() ));
-                $("#money_month").val(numberWithCommas($("#money_month").val() ));
-                var money = $('#money').val().replaceAll(",", "");
-                var money_month = $('#money_month').val().replaceAll(",", "");
-                $("#months_number").val(numberWithCommas( (money/money_month) ));
-            // }
-            
+        $('#money_dolar').on("change" , function(){
+            $("#money_dolar").val(numberWithCommas($("#money_dolar").val() ));
         });
+   
 
     });
 

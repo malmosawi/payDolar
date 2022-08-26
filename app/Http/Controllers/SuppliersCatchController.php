@@ -15,23 +15,25 @@ class SuppliersCatchController extends Controller
 {
     public function default()
     {   
-        $suppliers_catch = DB::table('suppliers_catch')->where('id', '<>', null)->orderBy('id', 'DESC')->get();
+        $suppliers_catch = SuppliersCatch::orderBy('id', 'DESC')->get();
+        //$suppliers_catch = DB::table('suppliers_catch')->where('id', '<>', null)->orderBy('id', 'DESC')->get();
         return view('suppliers_catch.default' , ['suppliers_catch'=>$suppliers_catch]);
     }
 
     public function create()
     {   
-        $suppliers = DB::table('suppliers')->where('id', '<>', null)->orderBy('id', 'DESC')->get();
+        $suppliers = Suppliers::orderBy('id', 'DESC')->get();
+        // $suppliers = DB::table('suppliers')->where('id', '<>', null)->orderBy('id', 'DESC')->get();
         return view('suppliers_catch.create' , ['suppliers'=>$suppliers]);
     }
 
     public function store(Request $request)
     {
         $rules = [
-            'name' => ['required', 'regex:/(^([\p{Arabic}a-zA-z0-9 ]+)?$)/u'],
-            'money' => ['required','regex:/(^([\p{Arabic}a-zA-z0-9.,()-\/ ]+)?$)/u'],
-            'exchange_rate' => ['required', 'regex:/(^([\p{Arabic}a-zA-z0-9.,()-\/ ]+)?$)/u'],
-            'date' => ['required', 'date'],
+            'name' => ['required', 'regex:/(^([\p{Arabic}a-zA-z0-9 ]+)?$)/u' , 'max:255'],
+            'money' => ['required','regex:/(^([\p{Arabic}a-zA-z0-9.,()-\/ ]+)?$)/u' , 'max:255'],
+            'exchange_rate' => ['required', 'regex:/(^([\p{Arabic}a-zA-z0-9.,()-\/ ]+)?$)/u' , 'max:255'],
+            'date' => ['required', 'date' , 'max:255'],
             
         ];
 
@@ -54,16 +56,22 @@ class SuppliersCatchController extends Controller
           return back()->withErrors($validator->errors())->withInput();
         }else{
 
+            $m1 = str_replace("," , '', $request->input('dolar_box'));
+            $m2 = str_replace("," , '', $request->input('money'));
+            $m3 = str_replace("," , '', $request->input('exchange_rate'));
+            $m4 = str_replace("," , '', $request->input('money_from'));
+            $m5 = str_replace("," , '', $request->input('money_to'));
+
             $SuppliersCatch = new SuppliersCatch;
             $SuppliersCatch->id_suppliers = $request->input('name');
-            $SuppliersCatch->money = $request->input('money');
-            $SuppliersCatch->exchange_rate = $request->input('exchange_rate');
+            $SuppliersCatch->money = $m2;
+            $SuppliersCatch->exchange_rate = $m3;
             $SuppliersCatch->date = $request->input('date');
-            $SuppliersCatch->created_at = Auth::user()->username;
+            $SuppliersCatch->user_created = Auth::user()->username;
             $SuppliersCatch->save();
 
             $money_setting = DB::table('setting')->where('id', '=', 1 )->sum('dolar_box');
-            $money = DB::table('suppliers_catch')->where([['id_suppliers', '=',  $request->input('name')], ['money', '=',  $request->input('money')], ['exchange_rate', '=',  $request->input('exchange_rate')], ['date', '=',  $request->input('date')]])->sum('money');
+            $money = DB::table('suppliers_catch')->where([['id_suppliers', '=',  $request->input('name')], ['money', '=',  $m2], ['exchange_rate', '=',  $m3], ['date', '=',  $request->input('date')]])->sum('money');
             $minus = $money_setting+$money;
 
             $data=array('dolar_box'=>$minus);
@@ -71,26 +79,27 @@ class SuppliersCatchController extends Controller
 
             $request->session()->flash('success', 'تمت الإضافة بنجاح.');
             return redirect('suppliersCatch');
+
         }
 
     }
 
     public function edit($id)
     {   
-        $suppliersCatch = DB::table('suppliers_catch')->where('id', '=', $id)->get();
-        $suppliers = DB::table('suppliers')->where('id', '<>', null)->orderBy('id', 'DESC')->get();
+        $suppliersCatch = DB::table('suppliers_catch')->where([['id', '=', $id] , ['deleted_at' , '=' , null ]])->get();
+        $suppliers = DB::table('suppliers')->where([['id', '<>', null ] , ['deleted_at' , '=' , null ]])->orderBy('id', 'DESC')->get();
         return view('suppliers_catch/edit',['suppliersCatch'=>$suppliersCatch , 'suppliers'=>$suppliers]);
         
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, $id , $old_money)
     {
         
         $rules = [
-            'name' => ['required', 'regex:/(^([\p{Arabic}a-zA-z0-9 ]+)?$)/u'],
-            'money' => ['required','regex:/(^([\p{Arabic}a-zA-z0-9.,()-\/ ]+)?$)/u'],
-            'exchange_rate' => ['required', 'regex:/(^([\p{Arabic}a-zA-z0-9.,()-\/ ]+)?$)/u'],
-            'date' => ['required', 'date'],
+            'name' => ['required', 'regex:/(^([\p{Arabic}a-zA-z0-9 ]+)?$)/u' , 'max:255'],
+            'money' => ['required','regex:/(^([\p{Arabic}a-zA-z0-9.,()-\/ ]+)?$)/u' , 'max:255'],
+            'exchange_rate' => ['required', 'regex:/(^([\p{Arabic}a-zA-z0-9.,()-\/ ]+)?$)/u' , 'max:255'],
+            'date' => ['required', 'date' , 'max:255'],
             
         ];
 
@@ -113,18 +122,67 @@ class SuppliersCatchController extends Controller
           return back()->withErrors($validator->errors())->withInput();
         }else{
 
+            $m1 = str_replace("," , '', $request->input('dolar_box'));
+            $m2 = str_replace("," , '', $request->input('money'));
+            $m3 = str_replace("," , '', $request->input('exchange_rate'));
+            $m4 = str_replace("," , '', $request->input('money_from'));
+            $m5 = str_replace("," , '', $request->input('money_to'));
+            
             $SuppliersCatch = SuppliersCatch::find($id);
             $SuppliersCatch->id_suppliers = $request->input('name');
-            $SuppliersCatch->money = $request->input('money');
-            $SuppliersCatch->exchange_rate = $request->input('exchange_rate');
+            $SuppliersCatch->money = $m2;
+            $SuppliersCatch->exchange_rate = $m3;
             $SuppliersCatch->date = $request->input('date');
-            $SuppliersCatch->updated_at = Auth::user()->username;
+            $SuppliersCatch->user_updated = Auth::user()->username;
             $SuppliersCatch->save();
+
+            $money_setting = DB::table('setting')->where('id', '=', 1 )->sum('dolar_box');
+            $money = DB::table('suppliers_catch')->where([['id_suppliers', '=',  $request->input('name')], ['money', '=',  $m2], ['exchange_rate', '=',  $m3], ['date', '=',  $request->input('date')]])->sum('money');
+            $minus = (($money_setting-$old_money)+$money);
+
+            $data=array('dolar_box'=>$minus);
+            DB::table('setting')->where('id','=', 1)->update($data);
 
             $request->session()->flash('success', 'تم التعديل بنجاح.');
             return redirect('suppliersCatch');
-        }
+
+        }//else
+            
         
+    }
+
+    public function destroy(Request $request)
+    {
+        $SuppliersCatch =SuppliersCatch::find($request->GET('id'));
+        $SuppliersCatch->user_deleted = Auth::user()->username;
+        $SuppliersCatch->save();
+
+        $money_setting = DB::table('setting')->where('id', '=', 1 )->sum('dolar_box');
+        $money = DB::table('suppliers_catch')->where('id', '=',  $request->GET('id') )->sum('money');
+        $minus = ($money_setting-$money);
+
+        $data=array('dolar_box'=>$minus);
+        DB::table('setting')->where('id','=', 1)->update($data);
+        
+        if($SuppliersCatch->delete()){
+            $response['data'] = 'success';
+        }else{
+            $response['data'] = 'error';
+        }
+
+        return response()->json($response);
+        
+    }
+
+    public function get_money(Request $request)
+    {
+
+        $money_from = DB::table('suppliers_catch')->where([['id_suppliers', '=', $request->GET('id')] , ['deleted_at' , '=' , null ]])->sum('money');
+        $money_to = DB::table('suppliers_expenses')->where([['id_suppliers', '=', $request->GET('id')] , ['deleted_at' , '=' , null ]])->sum('money');
+        
+        $response['data'] = array("money_from"=> $money_from , "money_to" => $money_to);
+        return response()->json($response);
+
     }
 
 

@@ -1,5 +1,5 @@
 <!-- Horizontal-menu -->
-<div class="horizontal-main hor-menu clearfix">
+<div class="horizontal-main hor-menu clearfix" style="padding-top: 10px;">
   <div class="horizontal-mainwrapper container clearfix">
     <nav class="horizontalMenu clearfix">
       <ul class="horizontalMenu-list">
@@ -8,6 +8,9 @@
         <li aria-haspopup="true"><a href="{{url('suppliersCatch')}}" class="suppliersCatch"><i class="typcn typcn-arrow-move-outline"></i>القبض من الموردين</a></li>
         <li aria-haspopup="true"><a href="{{url('suppliersExpenses')}}" class="suppliersExpenses"><i class="typcn typcn-arrow-move-outline"></i>الصرف للموردين</a></li>
         <li aria-haspopup="true"><a href="{{url('expenses')}}" class="expenses"><i class="typcn typcn-arrow-move-outline"></i>المصاريف</a></li>
+        <li aria-haspopup="true"><a href="{{url('disexpenses')}}" class="disexpenses"><i class="typcn typcn-arrow-move-outline"></i>صرف المصاريف</a></li>
+        <li aria-haspopup="true"><a href="{{url('convertDolarToDinar')}}" class="convertDolarToDinar"><i class="typcn typcn-arrow-move-outline"></i>تحويل الدولار الى دينار</a></li>
+        <li aria-haspopup="true"><a href="{{url('convertDinarToDolar')}}" class="convertDinarToDolar"><i class="typcn typcn-arrow-move-outline"></i>تحويل الدينار الى دولار</a></li>
         
         <li aria-haspopup="true"><a href="{{url('contract')}}" class="contract"><i class="typcn typcn-arrow-move-outline"></i>العقد</a></li>
         <li aria-haspopup="true"><a href="{{url('installmentPay')}}" class="installmentPay"><i class="typcn typcn-arrow-move-outline"></i>التسديد اقساط</a></li>

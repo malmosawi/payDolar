@@ -41,8 +41,12 @@ class SettingController extends Controller
           return back()->withErrors($validator->errors())->withInput();
         }else{
 
+            $m1 = str_replace("," , '', $request->input('dolar_box'));
+            $m2 = str_replace("," , '', $request->input('dinar_box'));
+            $m3 = str_replace("," , '', $request->input('exchange_rate'));
+
             $setting = Setting::find(1);
-            $setting->exchange_rate = $request->input('exchange_rate');
+            $setting->exchange_rate = $m3;
             $setting->add_rate = $request->input('add_rate');
             $setting->created_at = Auth::user()->username;
             $setting->updated_at = Auth::user()->username;

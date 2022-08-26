@@ -26,9 +26,9 @@
         <div class="col-md-12">
         
             <div class="card">
-                <div class="card-header">
+                <!-- <div class="card-header">
                     <h3 class="mb-0 card-title">دفتر حساب صرف مبلغ للمورد</h3>
-                </div>
+                </div> -->
                 <div class="card-body">
 
                     <center>
@@ -45,13 +45,13 @@
                         </div>
                         @endif
 
-                        @if (count($errors) > 0)
+                        <!-- @if (count($errors) > 0)
                             
                             @foreach($errors->all() as $error)
                             <div class="alert alert-danger mt-0 mb-3"><strong>{{ $error }}</strong></div>
                             @endforeach
                         
-                        @endif
+                        @endif -->
                     </center>
 
                     <form action="{{route('suppliersExpenses.store')}}" autocomplete="on" method="post" enctype="multipart/form-data" >                                
@@ -59,14 +59,14 @@
 
                         <div class="row">
 
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <label class="form-label">اسم المورد</label>
                                     <select id="single" name="name" class="form-control @error('name') is-invalid state-invalid @enderror">
                                 
                                         @foreach($suppliers as $key=>$supplier)
                                         
-                                            <option <?php if(old('name')==$supplier->id) echo "selected"; ?> data-name="{{$supplier->name}}" value="{{$supplier->id}}">{{$supplier->name}}</option>
+                                            <option <?php if(old('name')==$supplier->id) echo "selected"; ?> value="{{$supplier->id}}">{{$supplier->name}}</option>
                                             
                                         @endforeach
 
@@ -74,14 +74,46 @@
                                 </div>
                             </div>
 
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="form-label">المبلغ المستلم من المورد(بالدولار)</label>
+                                    <input type="text" readonly class="form-control @error('money_from') is-invalid state-invalid @enderror" name="money_from" id="money_from" value="{{ old('money_from') }}" placeholder="">
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="form-label">المبلغ المسلم الى المورد(بالدولار)</label>
+                                    <input type="text" readonly class="form-control @error('money_to') is-invalid state-invalid @enderror" name="money_to" id="money_to" value="{{ old('money_to') }}" placeholder="">
+                                </div>
+                            </div>
+
+                            <?php
+                                $money_setting = DB::table('setting')->where('id', '=', 1 )->sum('dolar_box');
+                            ?>
+
                             <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label">صندوق الدولار</label>
+                                    <input type="text" readonly class="form-control @error('dolar_box') is-invalid state-invalid @enderror" name="dolar_box" id="dolar_box" value="{{ $money_setting }}" placeholder="">
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label">ايداء مبلغ للمورد(بالدولار)</label>
+                                    <input type="text" class="form-control @error('money') is-invalid state-invalid @enderror" name="money" id="money" value="{{ old('money') }}" placeholder="">
+                                </div>
+                            </div>
+
+                            <!-- <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="form-label">المبلغ المسدد للمورد(بالدولار)</label>
                                     <select id="money" name="money" class="custom-select @error('money') is-invalid state-invalid @enderror">
                                         <option selected disabled value="">اختر...</option>
                                     </select>
                                 </div>
-                            </div>
+                            </div> -->
 
                             <div class="col-md-6">
                                 <div class="form-group">
@@ -131,6 +163,13 @@
     $(".subPage").text("إضافة");
 
     $(document).ready(function() {
+        $("#dolar_box").val(numberWithCommas($("#dolar_box").val() ));
+
+        $("#exchange_rate").val(numberWithCommas($("#exchange_rate").val() ));
+        
+        $('#money').on("change" , function(){
+            $("#money").val(numberWithCommas($("#money").val() ));
+        });
 
         $('#single').change(function(){
             
@@ -140,19 +179,46 @@
                     type: "POST",
                     url: "{{ url('suppliersExpenses/get_money')}}",
                     method:"get",//web page
-                    data:{'id':id},
-                    success: function(data) {
+                    dataType:"json",
+                    data:{
+                        "id": id,
+                        "_token": "{{ csrf_token() }}",
+                    },
+                    success: function(reponse) {
 
-                        $("#money").html(data);
-                        
+                        $("#money_from").val(numberWithCommas(reponse.data.money_from));
+                        $("#money_to").val(numberWithCommas(reponse.data.money_to));
+
                     } //success
                 });
                     
-            // var id = $("#searchid").data("id");
-            
         });
 
     });
+
+    // $(document).ready(function() {
+
+    //     $('#single').change(function(){
+            
+    //             var id = $('#single').val();
+                
+    //             $.ajax({
+    //                 type: "POST",
+    //                 url: "{{ url('suppliersCatch/get_money')}}",
+    //                 method:"get",//web page
+    //                 data:{'id':id},
+    //                 success: function(data) {
+
+    //                     $("#money").html(data);
+                        
+    //                 } //success
+    //             });
+                    
+    //         // var id = $("#searchid").data("id");
+            
+    //     });
+
+    // });
 
 </script>
 @endsection

@@ -15,23 +15,25 @@ class SuppliersExpensesController extends Controller
 {
     public function default()
     {   
-        $suppliers_expenses = DB::table('suppliers_expenses')->where('id', '<>', null)->orderBy('id', 'DESC')->get();
+        $suppliers_expenses = SuppliersExpenses::orderBy('id', 'DESC')->get();
+        // $suppliers_expenses = DB::table('suppliers_expenses')->where('id', '<>', null)->orderBy('id', 'DESC')->get();
         return view('suppliers_expenses.default' , ['suppliers_expenses'=>$suppliers_expenses]);
     }
 
     public function create()
     {   
-        $suppliers = DB::table('suppliers')->where('id', '<>', null)->orderBy('id', 'DESC')->get();
+        $suppliers = Suppliers::orderBy('id', 'DESC')->get();
+        // $suppliers = DB::table('suppliers')->where('id', '<>', null)->orderBy('id', 'DESC')->get();
         return view('suppliers_expenses.create' , ['suppliers'=>$suppliers]);
     }
 
     public function store(Request $request)
     {
         $rules = [
-            'name' => ['required', 'regex:/(^([\p{Arabic}a-zA-z0-9 ]+)?$)/u'],
-            'money' => ['required','regex:/(^([\p{Arabic}a-zA-z0-9.,()-\/ ]+)?$)/u'],
-            'exchange_rate' => ['required', 'regex:/(^([\p{Arabic}a-zA-z0-9.,()-\/ ]+)?$)/u'],
-            'date' => ['required', 'date'],
+            'name' => ['required', 'regex:/(^([\p{Arabic}a-zA-z0-9 ]+)?$)/u' , 'max:255'],
+            'money' => ['required','regex:/(^([\p{Arabic}a-zA-z0-9.,()-\/ ]+)?$)/u' , 'max:255'],
+            'exchange_rate' => ['required', 'regex:/(^([\p{Arabic}a-zA-z0-9.,()-\/ ]+)?$)/u' , 'max:255'],
+            'date' => ['required', 'date' , 'max:255'],
             
         ];
 
@@ -54,44 +56,61 @@ class SuppliersExpensesController extends Controller
           return back()->withErrors($validator->errors())->withInput();
         }else{
 
-            $SuppliersExpenses = new SuppliersExpenses;
-            $SuppliersExpenses->id_suppliers = $request->input('name');
-            $SuppliersExpenses->money = $request->input('money');
-            $SuppliersExpenses->exchange_rate = $request->input('exchange_rate');
-            $SuppliersExpenses->date = $request->input('date');
-            $SuppliersExpenses->created_at = Auth::user()->username;
-            $SuppliersExpenses->save();
+            $m1 = str_replace("," , '', $request->input('dolar_box'));
+            $m2 = str_replace("," , '', $request->input('money'));
+            $m3 = str_replace("," , '', $request->input('exchange_rate'));
+            $m4 = str_replace("," , '', $request->input('money_from'));
+            $m5 = str_replace("," , '', $request->input('money_to'));
+            $m6=(int)$m2 + (int)$m5;
 
-            $money_setting = DB::table('setting')->where('id', '=', 1 )->sum('dolar_box');
-            $money = DB::table('suppliers_expenses')->where([['id_suppliers', '=',  $request->input('name')], ['money', '=',  $request->input('money')], ['exchange_rate', '=',  $request->input('exchange_rate')], ['date', '=',  $request->input('date')]])->sum('money');
-            $minus = $money_setting-$money;
+            if((int)$m2 > (int)$m1){
 
-            $data=array('dolar_box'=>$minus);
-            DB::table('setting')->where('id','=', 1)->update($data);
-        
+                return back()->with('error', 'المبلغ المسدد للمورد اكبر من صندوق الدولار.');
 
-            $request->session()->flash('success', 'تمت الإضافة بنجاح.');
-            return redirect('suppliersExpenses');
+            }else if(($m6 < (int)$m4)){
+
+                $suppliersExpenses = new SuppliersExpenses;
+                $suppliersExpenses->id_suppliers = $request->input('name');
+                $suppliersExpenses->money = $m2;
+                $suppliersExpenses->exchange_rate = $m3;
+                $suppliersExpenses->date = $request->input('date');
+                $suppliersExpenses->user_created = Auth::user()->username;
+                $suppliersExpenses->save();
+
+                $money_setting = DB::table('setting')->where('id', '=', 1 )->sum('dolar_box');
+                $money = DB::table('suppliers_expenses')->where([['id_suppliers', '=',  $request->input('name')], ['money', '=',  $m2], ['exchange_rate', '=',  $m3], ['date', '=',  $request->input('date')]])->sum('money');
+                $minus = ($money_setting-$money);
+
+                $data=array('dolar_box'=>$minus);
+                DB::table('setting')->where('id','=', 1)->update($data);
+
+                $request->session()->flash('success', 'تمت الإضافة بنجاح.');
+                return redirect('suppliersExpenses');
+
+            }else{
+                return back()->with('error', 'المبلغ المسدد للمورد اكبر من المبلغ المستلم من المورد.');
+            }
+
         }
 
     }
 
     public function edit($id)
     {   
-        $suppliersExpensess = DB::table('suppliers_expenses')->where('id', '=', $id)->get();
-        $suppliers = DB::table('suppliers')->where('id', '<>', null)->orderBy('id', 'DESC')->get();
+        $suppliersExpensess = DB::table('suppliers_expenses')->where([['id', '=', $id] , ['deleted_at' , '=' , null ]])->get();
+        $suppliers = DB::table('suppliers')->where([['id', '<>', null ] , ['deleted_at' , '=' , null ]])->orderBy('id', 'DESC')->get();
         return view('suppliers_expenses/edit',['suppliersExpensess'=>$suppliersExpensess , 'suppliers'=>$suppliers]);
         
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, $id , $old_money)
     {
         
         $rules = [
-            'name' => ['required', 'regex:/(^([\p{Arabic}a-zA-z0-9 ]+)?$)/u'],
-            'money' => ['required','regex:/(^([\p{Arabic}a-zA-z0-9.,()-\/ ]+)?$)/u'],
-            'exchange_rate' => ['required', 'regex:/(^([\p{Arabic}a-zA-z0-9.,()-\/ ]+)?$)/u'],
-            'date' => ['required', 'date'],
+            'name' => ['required', 'regex:/(^([\p{Arabic}a-zA-z0-9 ]+)?$)/u' , 'max:255'],
+            'money' => ['required','regex:/(^([\p{Arabic}a-zA-z0-9.,()-\/ ]+)?$)/u' , 'max:255'],
+            'exchange_rate' => ['required', 'regex:/(^([\p{Arabic}a-zA-z0-9.,()-\/ ]+)?$)/u' , 'max:255'],
+            'date' => ['required', 'date' , 'max:255'],
             
         ];
 
@@ -114,35 +133,94 @@ class SuppliersExpensesController extends Controller
           return back()->withErrors($validator->errors())->withInput();
         }else{
 
-            $SuppliersExpenses = SuppliersExpenses::find($id);
-            $SuppliersExpenses->id_suppliers = $request->input('name');
-            $SuppliersExpenses->money = $request->input('money');
-            $SuppliersExpenses->exchange_rate = $request->input('exchange_rate');
-            $SuppliersExpenses->date = $request->input('date');
-            $SuppliersExpenses->updated_at = Auth::user()->username;
-            $SuppliersExpenses->save();
+            $m1 = str_replace("," , '', $request->input('dolar_box'));
+            $m2 = str_replace("," , '', $request->input('money'));
+            $m3 = str_replace("," , '', $request->input('exchange_rate'));
+            $m4 = str_replace("," , '', $request->input('money_from'));
+            $m5 = str_replace("," , '', $request->input('money_to'));
+            $m6=(int)$m2 + (int)$m5;
 
-            $request->session()->flash('success', 'تم التعديل بنجاح.');
-            return redirect('suppliersExpenses');
+            if((int)$m2 > (int)$m1){
+
+                return back()->with('error', 'المبلغ المسدد للمورد اكبر من صندوق الدولار.');
+
+            }else if(($m6 < (int)$m4)){
+
+                $suppliersExpenses = SuppliersExpenses::find($id);
+                $suppliersExpenses->id_suppliers = $request->input('name');
+                $suppliersExpenses->money = $m2;
+                $suppliersExpenses->exchange_rate = $m3;
+                $suppliersExpenses->date = $request->input('date');
+                $suppliersExpenses->user_updated = Auth::user()->username;
+                $suppliersExpenses->save();
+
+                $money_setting = DB::table('setting')->where('id', '=', 1 )->sum('dolar_box');
+                $money = DB::table('suppliers_expenses')->where([['id_suppliers', '=',  $request->input('name')], ['money', '=',  $m2], ['exchange_rate', '=',  $m3], ['date', '=',  $request->input('date')]])->sum('money');
+                $minus = (($money_setting+$old_money)-$money);
+
+                $data=array('dolar_box'=>$minus);
+                DB::table('setting')->where('id','=', 1)->update($data);
+
+                $request->session()->flash('success', 'تم التعديل بنجاح.');
+                return redirect('suppliersExpenses');
+
+            }else{
+                return back()->with('error', 'المبلغ المسدد للمورد اكبر من المبلغ المستلم من المورد.');
+            }
+
         }
         
     }
 
+    public function destroy(Request $request)
+    {
+        $suppliersExpenses =SuppliersExpenses::find($request->GET('id'));
+        $suppliersExpenses->user_deleted = Auth::user()->username;
+        $suppliersExpenses->save();
+
+        $money_setting = DB::table('setting')->where('id', '=', 1 )->sum('dolar_box');
+        $money = DB::table('suppliers_expenses')->where('id', '=',  $request->GET('id') )->sum('money');
+        $minus = ($money_setting+$money);
+
+        $data=array('dolar_box'=>$minus);
+        DB::table('setting')->where('id','=', 1)->update($data);
+        
+        if($suppliersExpenses->delete()){
+            $response['data'] = 'success';
+        }else{
+            $response['data'] = 'error';
+        }
+
+        return response()->json($response);
+        
+    }
 
     public function get_money(Request $request)
     {
 
-        $money1 = DB::table('suppliers_catch')->where('id_suppliers', '=', $request->GET('id') )->sum('money');
-        $money2 = DB::table('suppliers_expenses')->where('id_suppliers', '=', $request->GET('id') )->sum('money');
+        $money_from = DB::table('suppliers_catch')->where([['id_suppliers', '=', $request->GET('id')] , ['deleted_at' , '=' , null ]])->sum('money');
+        $money_to = DB::table('suppliers_expenses')->where([['id_suppliers', '=', $request->GET('id')] , ['deleted_at' , '=' , null ]])->sum('money');
         
-        echo "<option selected disabled >اختر...</option>";
-        if($money1 != $money2){
-            for ($i=100; $i <=((int)$money1-(int)$money2) ; $i+=100) { 
-                echo "<option value='$i'>$i</option>";
-            }
-        }
+        $response['data'] = array("money_from"=> $money_from , "money_to" => $money_to);
+        return response()->json($response);
 
     }
+
+
+    // public function get_money2(Request $request)
+    // {
+
+    //     $money1 = DB::table('suppliers_catch')->where('id_suppliers', '=', $request->GET('id') )->sum('money');
+    //     $money2 = DB::table('suppliers_expenses')->where('id_suppliers', '=', $request->GET('id') )->sum('money');
+        
+    //     echo "<option selected disabled >اختر...</option>";
+    //     if($money1 != $money2){
+    //         for ($i=100; $i <=((int)$money1-(int)$money2) ; $i+=100) { 
+    //             echo "<option value='$i'>$i</option>";
+    //         }
+    //     }
+
+    // }
 
 
 }

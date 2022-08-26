@@ -10,6 +10,9 @@ use App\Http\Controllers\SuppliersController;
 use App\Http\Controllers\SuppliersExpensesController;
 use App\Http\Controllers\SuppliersCatchController;
 use App\Http\Controllers\ExpensesController;
+use App\Http\Controllers\DisExpensesController;
+use App\Http\Controllers\ConvertDolarToDinarController;
+use App\Http\Controllers\ConvertDinarToDolarController;
 use App\Http\Controllers\ContractController;
 use App\Http\Controllers\InstallmentPayController;
 /*
@@ -57,14 +60,17 @@ Route::group(['middleware' => 'auth'], function() {
     Route::get('suppliersExpenses/create', [SuppliersExpensesController::class, 'create'])->name('suppliersExpenses.create');
     Route::post('suppliersExpenses/store', [SuppliersExpensesController::class, 'store'])->name('suppliersExpenses.store');
     Route::get('suppliersExpenses/{id}/edit', [SuppliersExpensesController::class, 'edit'])->name('suppliersExpenses.edit');
-    Route::post('suppliersExpenses/{id}/update', [SuppliersExpensesController::class, 'update'])->name('suppliersExpenses.update');
+    Route::post('suppliersExpenses/{id}/{old_money}/update', [SuppliersExpensesController::class, 'update'])->name('suppliersExpenses.update');
+    Route::get('suppliersExpenses/destroy', [SuppliersExpensesController::class, 'destroy'])->name('suppliersExpenses.destroy');
     Route::get('suppliersExpenses/get_money', [SuppliersExpensesController::class, 'get_money'])->name('suppliersExpenses.get_money');
 
     Route::get('suppliersCatch', [SuppliersCatchController::class, 'default'])->name('suppliersCatch.default');
     Route::get('suppliersCatch/create', [SuppliersCatchController::class, 'create'])->name('suppliersCatch.create');
     Route::post('suppliersCatch/store', [SuppliersCatchController::class, 'store'])->name('suppliersCatch.store');
     Route::get('suppliersCatch/{id}/edit', [SuppliersCatchController::class, 'edit'])->name('suppliersCatch.edit');
-    Route::post('suppliersCatch/{id}/update', [SuppliersCatchController::class, 'update'])->name('suppliersCatch.update');
+    Route::post('suppliersCatch/{id}/{old_money}/update', [SuppliersCatchController::class, 'update'])->name('suppliersCatch.update');
+    Route::get('suppliersCatch/destroy', [SuppliersCatchController::class, 'destroy'])->name('suppliersCatch.destroy');
+    Route::get('suppliersCatch/get_money', [SuppliersCatchController::class, 'get_money'])->name('suppliersCatch.get_money');
 
     Route::get('expenses', [ExpensesController::class, 'default'])->name('expenses.default');
     Route::get('expenses/create', [ExpensesController::class, 'create'])->name('expenses.create');
@@ -73,17 +79,40 @@ Route::group(['middleware' => 'auth'], function() {
     Route::post('expenses/{id}/update', [ExpensesController::class, 'update'])->name('expenses.update');
     Route::get('expenses/destroy', [ExpensesController::class, 'destroy'])->name('expenses.destroy');
 
+    Route::get('disexpenses', [DisExpensesController::class, 'default'])->name('disexpenses.default');
+    Route::get('disexpenses/create', [DisExpensesController::class, 'create'])->name('disexpenses.create');
+    Route::post('disexpenses/store', [DisExpensesController::class, 'store'])->name('disexpenses.store');
+    Route::get('disexpenses/{id}/edit', [DisExpensesController::class, 'edit'])->name('disexpenses.edit');
+    Route::post('disexpenses/{id}/{old_money}/update', [DisExpensesController::class, 'update'])->name('disexpenses.update');
+    Route::get('disexpenses/destroy', [DisExpensesController::class, 'destroy'])->name('disexpenses.destroy');
+
+    Route::get('convertDolarToDinar', [ConvertDolarToDinarController::class, 'default'])->name('convertDolarToDinar.default');
+    Route::get('convertDolarToDinar/create', [ConvertDolarToDinarController::class, 'create'])->name('convertDolarToDinar.create');
+    Route::post('convertDolarToDinar/store', [ConvertDolarToDinarController::class, 'store'])->name('convertDolarToDinar.store');
+    Route::get('convertDolarToDinar/{id}/edit', [ConvertDolarToDinarController::class, 'edit'])->name('convertDolarToDinar.edit');
+    Route::post('convertDolarToDinar/{id}/{old_money_dolar}/{old_money_dinar}/update', [ConvertDolarToDinarController::class, 'update'])->name('convertDolarToDinar.update');
+    Route::get('convertDolarToDinar/destroy', [ConvertDolarToDinarController::class, 'destroy'])->name('convertDolarToDinar.destroy');
+
+    Route::get('convertDinarToDolar', [ConvertDinarToDolarController::class, 'default'])->name('convertDinarToDolar.default');
+    Route::get('convertDinarToDolar/create', [ConvertDinarToDolarController::class, 'create'])->name('convertDinarToDolar.create');
+    Route::post('convertDinarToDolar/store', [ConvertDinarToDolarController::class, 'store'])->name('convertDinarToDolar.store');
+    Route::get('convertDinarToDolar/{id}/edit', [ConvertDinarToDolarController::class, 'edit'])->name('convertDinarToDolar.edit');
+    Route::post('convertDinarToDolar/{id}/{old_money_dolar}/{old_money_dinar}/update', [ConvertDinarToDolarController::class, 'update'])->name('convertDinarToDolar.update');
+    Route::get('convertDinarToDolar/destroy', [ConvertDinarToDolarController::class, 'destroy'])->name('convertDinarToDolar.destroy');
+    
     Route::get('contract', [ContractController::class, 'default'])->name('contract.default');
     Route::get('contract/create', [ContractController::class, 'create'])->name('contract.create');
     Route::post('contract/store', [ContractController::class, 'store'])->name('contract.store');
     Route::get('contract/{id}/edit', [ContractController::class, 'edit'])->name('contract.edit');
-    Route::post('contract/{id}/update', [ContractController::class, 'update'])->name('contract.update');
+    Route::post('contract/{id}/{old_money_dolar}/update', [ContractController::class, 'update'])->name('contract.update');
+    Route::get('contract/destroy', [ContractController::class, 'destroy'])->name('contract.destroy');
 
     Route::get('installmentPay', [InstallmentPayController::class, 'default'])->name('installmentPay.default');
     Route::get('installmentPay/create', [InstallmentPayController::class, 'create'])->name('installmentPay.create');
-    Route::post('installmentPay/store', [InstallmentPayController::class, 'store'])->name('installmentPay.store');
+    Route::get('installmentPay/{id_contract}/{kist_dinar}/{month}/store', [InstallmentPayController::class, 'store'])->name('installmentPay.store');
     Route::get('installmentPay/{id}/edit', [InstallmentPayController::class, 'edit'])->name('installmentPay.edit');
-    Route::post('installmentPay/{id}/update', [InstallmentPayController::class, 'update'])->name('installmentPay.update');
+    Route::post('installmentPay/{id_contract}/{month}/update', [InstallmentPayController::class, 'update'])->name('installmentPay.update');
+    Route::get('installmentPay/get_table', [InstallmentPayController::class, 'get_table'])->name('installmentPay.get_table');
     
     // Route::get('users', 'UsersController@default')->name('users.default');
     // Route::get('users/create', 'UsersController@create')->name('users.create');

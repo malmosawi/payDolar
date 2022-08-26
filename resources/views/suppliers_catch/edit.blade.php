@@ -26,9 +26,9 @@
         <div class="col-md-12">
         
             <div class="card">
-                <div class="card-header">
+                <!-- <div class="card-header">
                     <h3 class="mb-0 card-title">دفتر حساب قبض مبلغ من المورد</h3>
-                </div>
+                </div> -->
                 <div class="card-body">
 
                     <center>
@@ -45,22 +45,22 @@
                         </div>
                         @endif
 
-                        @if (count($errors) > 0)
+                        <!-- @if (count($errors) > 0)
                             
                             @foreach($errors->all() as $error)
                             <div class="alert alert-danger mt-0 mb-3"><strong>{{ $error }}</strong></div>
                             @endforeach
                         
-                        @endif
+                        @endif -->
                     </center>
 
                     @foreach($suppliersCatch as $key=>$supplierCatch)
-                    <form action="{{route('suppliersCatch.update', $supplierCatch->id)}}" autocomplete="on" method="post" enctype="multipart/form-data" >                                
+                    <form action="{{route('suppliersCatch.update', ['id' => $supplierCatch->id, 'old_money' => $supplierCatch->money] )}}" autocomplete="on" method="post" enctype="multipart/form-data" >                                
                     @csrf
 
                         <div class="row">
 
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <label class="form-label">اسم المورد</label>
                                     <select id="single" name="name" class="form-control @error('name') is-invalid state-invalid @enderror">
@@ -68,7 +68,7 @@
                                         @foreach($suppliers as $key=>$supplier)
                                         
                                             @if(old('name')=='')
-                                                <option <?php if($supplierCatch->id==$supplier->id) echo "selected"; ?> data-name="{{$supplier->name}}" value="{{$supplier->id}}">{{$supplier->name}}</option>
+                                                <option <?php if($supplierCatch->id_suppliers==$supplier->id) echo "selected"; ?> data-name="{{$supplier->name}}" value="{{$supplier->id}}">{{$supplier->name}}</option>
                                             @else 
                                                 <option <?php if(old('name')==$supplier->id) echo "selected"; ?> data-name="{{$supplier->name}}" value="{{$supplier->id}}">{{$supplier->name}}</option>
                                             @endif
@@ -78,9 +78,39 @@
                                 </div>
                             </div>
 
+                            <?php
+                                $money_from = DB::table('suppliers_catch')->where([['id_suppliers', '=', $supplierCatch->id_suppliers ] , ['deleted_at' , '=' , null ]])->sum('money');
+                                $money_to = DB::table('suppliers_expenses')->where([['id_suppliers', '=', $supplierCatch->id_suppliers ] , ['deleted_at' , '=' , null ]])->sum('money');
+                                
+                            ?>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="form-label">المبلغ المستلم من المورد(بالدولار)</label>
+                                    <input type="text" readonly class="form-control @error('money_from') is-invalid state-invalid @enderror" name="money_from" id="money_from" value="{{ $money_from }}" placeholder="">
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="form-label">المبلغ المسلم الى المورد(بالدولار)</label>
+                                    <input type="text" readonly class="form-control @error('money_to') is-invalid state-invalid @enderror" name="money_to" id="money_to" value="{{ $money_to }}" placeholder="">
+                                </div>
+                            </div>
+
+                            <?php
+                                $money_setting = DB::table('setting')->where('id', '=', 1 )->sum('dolar_box');
+                            ?>
+
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label class="form-label">المبلغ</label>
+                                    <label class="form-label">صندوق الدولار</label>
+                                    <input type="text" readonly class="form-control @error('dolar_box') is-invalid state-invalid @enderror" name="dolar_box" id="dolar_box" value="{{ $money_setting }}" placeholder="">
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label">ايداء مبلغ(بالدولار)</label>
                                     <input type="text" class="form-control @error('money') is-invalid state-invalid @enderror" name="money" id="money" value="{{ old('money')!=''? old('money') : $supplierCatch->money }}" placeholder="">
                                 </div>
                             </div>
@@ -132,6 +162,21 @@
     $(".suppliersCatch").addClass("active");
     $(".mainPage").text("القبض من الموردين");
     $(".subPage").text("تعديل");
+
+    $(document).ready(function() {
+    
+        $("#dolar_box").val(numberWithCommas($("#dolar_box").val() ));
+
+        $("#exchange_rate").val(numberWithCommas($("#exchange_rate").val() ));
+        $("#money_from").val(numberWithCommas($("#money_from").val() ));
+        $("#money_to").val(numberWithCommas($("#money_to").val() ));
+        $("#money").val(numberWithCommas($("#money").val() ));
+        
+        $('#money').on("change" , function(){
+            $("#money").val(numberWithCommas($("#money").val() ));
+        });
+
+    });
 </script>
 @endsection
 

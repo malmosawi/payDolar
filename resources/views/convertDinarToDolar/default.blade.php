@@ -14,7 +14,7 @@
     <div class="page-header">
         <div class="mr-auto">
             <div class="input-group">
-                <a class="btn btn-primary ml-5 mt-4 mt-sm-0" href="{{ url('contract/create') }}"> إضافة <i class="fe fe-plus ml-1 mt-1"></i></a>
+                <a class="btn btn-primary ml-5 mt-4 mt-sm-0" href="{{ url('convertDinarToDolar/create') }}"> تحويل <i class="fe fe-plus ml-1 mt-1"></i></a>
             </div>
         </div>
     </div>
@@ -26,7 +26,7 @@
         <div class="col-md-12 col-lg-12">
             <div class="card">
                 <!-- <div class="card-header">
-                    <div class="card-title">جدول معلومات العقود</div>
+                    <div class="card-title">جدول معلومات الصرف للموردين</div>
                 </div> -->
                 <div class="card-body">
                     <center>
@@ -57,54 +57,32 @@
                             <thead>
                                 <tr>
                                     <th class="wd-5p">التسلسل</th>
-                                    <th class="wd-20p">اسم الزبون</th>
+                                    <th class="wd-5p">المبلغ (بالدينار)</th>
+                                    <th class="wd-5p">سعر الصرف</th>
                                     <th class="wd-5p">المبلغ (بالدولار)</th>
-                                    <th class="wd-5p">عدد اشهر التسديد</th>
-                                    <th class="wd-5p">مبلغ الدفع كل شهر (بالدولار)</th>
-                                    <th class="wd-5p">سعر الصرف لكل 100 دولار</th>
-                                    <th class="wd-5p">النسبة المضافة (%)</th>
                                     <th class="wd-5p">التاريخ</th>
-                                    <!-- <th class="wd-5p">هل اكتمل التسديد</th>
-                                    <th class="wd-5p">المبلغ المسدد</th>
-                                    <th class="wd-5p">عدد الاشهر المسددة</th> -->
                                     <th class="wd-10p">التحكم</th>
                                 </tr>
                             </thead>
                             <tbody>
                             
                             <?php $num=0; ?>
-                            @foreach($contracts as $key=>$contract)
-                            <?php
-                                $customers = DB::table('customers')->where('id', '=', $contract->id_customers)->orderBy('id', 'DESC')->get();
-                                $money = DB::table('installment_pay')->where('id_contract', '=', $contract->id)->sum('money');
-                                $months_number = DB::table('installment_pay')->where('id_contract', '=', $contract->id)->sum('months_number');
-                                
-                            ?>
+                            @foreach($convertDinarToDolar as $key=>$convertDinar_Dolar)
+                            
                                 <tr>
                                     <td>{{ ++$num }}</td>
-                                    <td>{{ $customers[0]->name }}</td>
-                                    <td><?php echo preg_replace("/\B(?=(\d{3})+(?!\d))/", ",", $contract->money); ?></td>
-                                    <td><?php echo preg_replace("/\B(?=(\d{3})+(?!\d))/", ",", $contract->months_number); ?></td>
-                                    <td><?php echo preg_replace("/\B(?=(\d{3})+(?!\d))/", ",", $contract->money_month); ?></td>
-                                    <td><?php echo preg_replace("/\B(?=(\d{3})+(?!\d))/", ",", $contract->exchange_rate); ?></td>
-                                    <td><?php echo preg_replace("/\B(?=(\d{3})+(?!\d))/", ",", $contract->add_rate); ?></td>
-                                    <td>{{ $contract->date }}</td>
-
-                                    <!-- @if($contract->money == $money && $contract->months_number == $months_number)
-                                        <td>نعم</td>
-                                    @else
-                                        <td>لا</td>
-                                    @endif
-
-                                    <td>{{ $money." دولار"  }}</td>
-                                    <td>{{ $months_number  }}</td> -->
+                                    <td><?php echo preg_replace("/\B(?=(\d{3})+(?!\d))/", ",", $convertDinar_Dolar->money_dinar); ?></td>
+                                    <td><?php echo preg_replace("/\B(?=(\d{3})+(?!\d))/", ",", $convertDinar_Dolar->exchange_rate); ?></td>
+                                    <td><?php echo preg_replace("/\B(?=(\d{3})+(?!\d))/", ",", $convertDinar_Dolar->money_dolar); ?></td>
+                                    <td>{{ $convertDinar_Dolar->date }}</td>
                                     <td>
                                         
-                                        <a href='{{url("contract/$contract->id/edit")}}' class="btn btn-success" data-toggle="tooltip" data-placement="top" data-original-title="تعديل"><i class="si si-pencil text-dark"></i></a>
-                                        <a data-id="{{ $contract->id }}" class="btn btn-danger delete_at" data-toggle="tooltip" data-placement="top" data-original-title="حذف"><i class="si si-trash text-light"></i></a>
+                                        <a href='{{url("convertDinarToDolar/$convertDinar_Dolar->id/edit")}}' class="btn btn-success" data-toggle="tooltip" data-placement="top" data-original-title="تعديل"><i class="si si-pencil text-dark"></i></a>
+                                        <a data-id="{{ $convertDinar_Dolar->id }}" class="btn btn-danger delete_at" data-toggle="tooltip" data-placement="top" data-original-title="حذف"><i class="si si-trash text-light"></i></a>
                                             
                                     </td>
                                 </tr>
+
                             @endforeach
                                 
                             </tbody>
@@ -128,8 +106,8 @@
 
 @section('script')
 <script>
-    $(".contract").addClass("active");
-    $(".mainPage").text("العقد");
+    $(".convertDinarToDolar").addClass("active");
+    $(".mainPage").text("تحويل الدينار الى دولار");
     $(".subPage").text("");
 
     $(document).ready(function() {
@@ -152,7 +130,7 @@
                     
                     $.ajax({
                         type: "POST",
-                        url: "{{ url('contract/destroy')}}",
+                        url: "{{ url('convertDinarToDolar/destroy')}}",
                         method:"get",//web page
                         dataType:"json",
                         data:{
@@ -176,7 +154,7 @@
                                 });
                             }//else
                             
-                            setTimeout('window.open(\'{{url("contract/")}}\',\'_self\')', 2000);
+                            setTimeout('window.open(\'{{url("convertDinarToDolar/")}}\',\'_self\')', 2000);
                         } //success
                     });
                 } //if

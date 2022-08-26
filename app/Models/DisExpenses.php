@@ -5,16 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-
-class SuppliersExpenses extends Model
+class DisExpenses extends Model
 {
     use SoftDeletes;
     
-    protected $table = 'suppliers_expenses';
+    protected $table = 'dis_expenses';
     public $timestamps = true;
 
     protected $fillable = [
-        'id_suppliers', 'money', 'exchange_rate', 'date',
+        'id_expenses','money' , 'exchange_rate', 'date',
     ];
 
     

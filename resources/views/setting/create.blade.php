@@ -121,5 +121,17 @@
     // $(".customers").addClass("active");
     $(".mainPage").text("الاعدادات");
     $(".subPage").text("");
+
+    $(document).ready(function() {
+    
+        $("#exchange_rate").val(numberWithCommas($("#exchange_rate").val() ));
+        $("#dolar_box").val(numberWithCommas($("#dolar_box").val() ));
+        $("#dinar_box").val(numberWithCommas($("#dinar_box").val() ));
+        
+        $('#exchange_rate').on("change" , function(){
+            $("#exchange_rate").val(numberWithCommas($("#exchange_rate").val() ));
+        });
+
+    });
 </script>
 @endsection
