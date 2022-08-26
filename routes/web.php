@@ -26,7 +26,6 @@ use App\Http\Controllers\InstallmentPayController;
 |
 */
 
-
 Route::get('/', [LoginController::class, 'login'])->name('login');
 
 Route::get('login', [LoginController::class, 'login'])->name('login');//->middleware('throttle:5,5');
