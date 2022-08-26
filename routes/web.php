@@ -27,7 +27,7 @@ use App\Http\Controllers\InstallmentPayController;
 */
 
 
-
+Route::get('/', [LoginController::class, 'login'])->name('login');
 
 Route::get('login', [LoginController::class, 'login'])->name('login');//->middleware('throttle:5,5');
 Route::post('login', [LoginController::class, 'checklogin'])->name('checklogin');
@@ -123,18 +123,3 @@ Route::group(['middleware' => 'auth'], function() {
 
 });
 
-// Route::get('/cacheClear', function () {
-//     Artisan::call('route:clear');
-//     dd("Cache is Cleared!!");
-// });
-
-// Route::get('/welcome', function () {
-//     return view('welcome');
-// });
-
-
-// Route::get('/', function () {
-//     return view('demo');
-//  });
-
-// Route::get('my-home', [HomeController::class, 'myHome']);
