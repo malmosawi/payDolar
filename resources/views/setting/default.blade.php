@@ -25,9 +25,9 @@
     <div class="row">
         <div class="col-md-12 col-lg-12">
             <div class="card">
-                <div class="card-header">
+                <!-- <div class="card-header">
                     <div class="card-title">جدول معلومات الصرف للموردين</div>
-                </div>
+                </div> -->
                 <div class="card-body">
                     <center>
                         @if(session()->has('success'))

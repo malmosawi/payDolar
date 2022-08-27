@@ -23,11 +23,11 @@
                 <div class="col-2 text-center"></div>
                 <div class="col-4 text-center">
                 <!-- <a href="javascript:void(0);" class="btn" data-toggle='modal' data-target='#modal_barcode'>اضغط للطباعة</a> -->
-                  <a class="btn" data-toggle='modal' data-target='#modal_profile' href="javascript:void(0);"><i class="dropdown-icon mdi mdi-tune fs-30 m-0 leading-tight"></i></a>
+                  <a class="btn" data-toggle='modal' data-target='#modal_profile' href="javascript:void(0);"><i class="si si-pencil fs-30 m-0 leading-tight"></i></a>
                   <div>تعديل</div>
                 </div>
                 <div class="col-4 text-center">
-                  <a class="" href="{{ url('logout') }}"><i class="dropdown-icon mdi mdi-logout-variant fs-30 m-0 leading-tight"></i></a>
+                  <a class="btn" href="{{ url('logout') }}"><i class="dropdown-icon mdi mdi-logout-variant fs-30 m-0 leading-tight" style="color:red;"></i></a>
                   <div>تسجيل خروج</div>
                 </div>
                 <div class="col-2 text-center"></div>
