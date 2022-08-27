@@ -10,6 +10,8 @@ use App\Models\User;
 use DB;
 use App;
 use Auth;
+use PDF;
+use NumberFormatter;
 
 class SuppliersExpensesController extends Controller
 {
@@ -206,6 +208,110 @@ class SuppliersExpensesController extends Controller
 
     }
 
+    public function print_catch($id)
+    {   
+       
+
+            $expenses = DB::table('suppliers_expenses')->where([['id', '=', $id] , ['deleted_at','=', null ]])->orderBy('id', 'DESC')->get();
+           
+            PDF::SetTitle('PDF');
+            PDF::AddPage();
+            PDF::SetRTL(true);
+            PDF::setPageFormat('A4','P');
+            PDF::SetFont('arial','',11);
+
+            $html1='';
+            if(false !== $expenses){
+
+                $suppliers = DB::table('suppliers')->where([['id', '=', $expenses[0]->id_suppliers ],['deleted_at','=', null ]])->orderBy('id', 'DESC')->get();
+                $im=asset('/assets/images/refootourism.png');  
+
+                //shape_1
+                $html1 .= '<table style=" align:center; text-align:center; margin:5px; padding:5px; width:100%;" >';
+                $html1 .= '<tr><th colspan="5" style=" border:1px solid black; background-color:white;" ><table style="padding:20px; width:100%;"><tr><td style="text-align:center; font-size:16px; font-family:arialbd;"> وصل صرف <br> Cash Receipt Voucher </td> <td style="text-align:left; width:100%;"></td></tr></table></th></tr>';
+                $html1 .= '<tr><td colspan="5" style=" border:1px solid black; "><table style="padding:5px; width:100%;"><tr><td style="text-align:right; font-size:12px; font-family:arialbd;"> شركة / Company : <label style="font-size:12px; font-family:arial;">شواطى البصرة</label></td> <td style="text-align:center; font-size:12px; font-family:arialbd;"><label style="font-size:12px; font-family:arial;">'.$expenses[0]->date.'</label> Date : </td> <td style="text-align:left; font-size:12px; font-family:arialbd;"><label style="color:red; font-size:12px; font-family:arial;">'.$expenses[0]->id.'</label> No : </td></tr></table></td></tr>';
+                $html1 .= '<tr style="background-color: #E7E9EB;"><td colspan="5" style=" border:1px solid black; "><table style="padding:5px; width:100%;"><tr><td style="text-align:right; font-size:12px; font-family:arialbd;"> سلمت الى : </td> <td style="text-align:center; font-size:12px; font-family:arial;">'.$suppliers[0]->name.'</td> <td style="text-align:left; font-size:12px; font-family:arialbd;"> Received To : </td></tr></table></td></tr>';
+                $html1 .= '<tr><td colspan="5" style=" border:1px solid black; "><table style="padding:5px; width:100%;"><tr><td style="text-align:right; font-size:12px; font-family:arialbd;"> مبلغاً قدره :  <label style="font-size:12px; font-family:arial;">'.$this->convertNumberToWord_AR($expenses[0]->money).' دولار فقط </label></td> <td style="text-align:left; font-size:12px; font-family:arialbd;"><label style="font-size:12px; font-family:arial;">'.$this->convertNumberToWord_EN($expenses[0]->money).' USD Only</label> The Sum of : </td></tr></table></td></tr>';
+                $html1 .= '<tr style="background-color:#E7E9EB;"><td colspan="5" style=" border:1px solid black; "><table style="padding:5px; width:100%;"><tr><td style="text-align:right; font-size:12px; font-family:arialbd;"> وذلک عن : </td> <td style="text-align:center; font-size:12px; font-family:arial;"></td> <td style="text-align:left; font-size:12px; font-family:arialbd;"> For : </td></tr></table></td></tr>';
+                $html1 .= '<tr><td colspan="5" style=" border:1px solid black; "><table style="padding:5px; width:100%;"><tr><td style="text-align:right; font-size:12px; font-family:arialbd;"> رقم الهاتف : </td> <td style="text-align:center; font-size:12px; font-family:arial;">'.$suppliers[0]->phone.'</td> <td style="text-align:left; font-size:12px; font-family:arialbd;"> Phone No. : </td></tr></table></td></tr>';
+                $html1 .= '<tr><td style=" border:1px solid black; ">'.preg_replace("/\B(?=(\d{3})+(?!\d))/", ",", $expenses[0]->money).'</td><td style=" border:1px solid black;"> USD </td> <td rowspan="2" style="border:1px solid black;"> Accountant </td> <td rowspan="2" style="border:1px solid black;"> Received To </td><td rowspan="2" style="border:1px solid black;">Manager </td></tr>';
+                $html1 .= '<tr><td style=" border:1px solid black; "></td><td style=" border:1px solid black;"> IQD </td> <td colspan="3" style=" border:1px solid black;"></td> </tr>';
+                $html1 .= '<tr><td colspan="5" style="border:1px solid black;"> <br><br><br><br> </td></tr>';
+                
+                $html1 .= '</table>';
+
+                $y= PDF::GetY();
+                PDF::SetXY(0,$y);
+                PDF::SetLeftMargin(5);
+                PDF::SetRightMargin(5);
+                PDF::WriteHtml($html1,true,false,false,true,'C');
+
+                $img= '<img src="'.$im.'" style="width:150px; height:60px;">';
+                PDF::SetRTL(false);
+                PDF::SetXY(120,15);
+                PDF::WriteHtml($img,true,false,false,true,'C');
+
+                //-----------------------------------------------------------------------------------------------------------------------------------------------------  
+                //shape_2
+                $html1='';
+                $html1 .= '<table style=" align:center; text-align:center; margin:5px; padding:5px; width:100%;" >';
+                $html1 .= '<tr><th colspan="5" style=" border:1px solid black; background-color:white;" ><table style="padding:20px; width:100%;"><tr><td style="text-align:center; font-size:16px; font-family:arialbd;"> وصل صرف <br> Cash Receipt Voucher </td> <td style="text-align:left; width:100%;"></td></tr></table></th></tr>';
+                $html1 .= '<tr style="background-color: #E7E9EB;"><td colspan="5" style=" border:1px solid black; "><table style="padding:5px; width:100%;"><tr><td style="text-align:right; font-size:12px; font-family:arialbd;"> سلمت الى : </td> <td style="text-align:center; font-size:12px; font-family:arial;">'.$suppliers[0]->name.'</td> <td style="text-align:left; font-size:12px; font-family:arialbd;"> Received To : </td></tr></table></td></tr>';
+                $html1 .= '<tr><td colspan="5" style=" border:1px solid black; "><table style="padding:5px; width:100%;"><tr><td style="text-align:right; font-size:12px; font-family:arialbd;"> مبلغاً قدره :  <label style="font-size:12px; font-family:arial;">'.$this->convertNumberToWord_AR($expenses[0]->money).' دولار فقط </label></td> <td style="text-align:left; font-size:12px; font-family:arialbd;"><label style="font-size:12px; font-family:arial;">'.$this->convertNumberToWord_EN($expenses[0]->money).' USD Only</label> The Sum of : </td></tr></table></td></tr>';
+                $html1 .= '<tr style="background-color:#E7E9EB;"><td colspan="5" style=" border:1px solid black; "><table style="padding:5px; width:100%;"><tr><td style="text-align:right; font-size:12px; font-family:arialbd;"> وذلک عن : </td> <td style="text-align:center; font-size:12px; font-family:arial;"></td> <td style="text-align:left; font-size:12px; font-family:arialbd;"> For : </td></tr></table></td></tr>';
+                $html1 .= '<tr><td colspan="5" style=" border:1px solid black; "><table style="padding:5px; width:100%;"><tr><td style="text-align:right; font-size:12px; font-family:arialbd;"> رقم الهاتف : </td> <td style="text-align:center; font-size:12px; font-family:arial;">'.$suppliers[0]->phone.'</td> <td style="text-align:left; font-size:12px; font-family:arialbd;"> Phone No. : </td></tr></table></td></tr>';
+                $html1 .= '<tr><td style=" border:1px solid black; ">'.preg_replace("/\B(?=(\d{3})+(?!\d))/", ",", $expenses[0]->money).'</td><td style=" border:1px solid black;"> USD </td> <td rowspan="2" style="border:1px solid black;"> Accountant </td> <td rowspan="2" style="border:1px solid black;"> Received To </td><td rowspan="2" style="border:1px solid black;">Manager </td></tr>';
+                $html1 .= '<tr><td style=" border:1px solid black; "></td><td style=" border:1px solid black;"> IQD </td> <td colspan="3" style=" border:1px solid black;"></td> </tr>';
+                $html1 .= '<tr><td colspan="5" style="border:1px solid black;"> <br><br><br><br> </td></tr>';
+                
+                $html1 .= '</table>';
+
+                PDF::SetRTL(true);
+                $y= PDF::GetY();
+                PDF::SetXY(0,$y+118);
+                PDF::SetLeftMargin(5);
+                PDF::SetRightMargin(5);
+                PDF::WriteHtml($html1,true,false,false,true,'C');
+
+                $img= '<img src="'.$im.'" style="width:150px; height:60px;">';
+                PDF::SetRTL(false);
+                PDF::SetXY(120,165);
+                PDF::WriteHtml($img,true,false,false,true,'C');
+            
+            }//if expenses
+
+            PDF::Output('expenses.pdf');  
+
+
+    }
+
+    function convertNumberToWord_AR($num)
+    {
+        $num = trim($num);
+        $num = (double) $num;
+        if(!$num) {
+            return false;
+        }else{
+            $f = new NumberFormatter("ar", NumberFormatter::SPELLOUT);
+            $aver_word=$f->format($num);
+        }//else
+
+        return $aver_word;
+    }
+
+    function convertNumberToWord_EN($num)
+    {
+        $num = trim($num);
+        $num = (double) $num;
+        if(!$num) {
+            return false;
+        }else{
+            $f = new NumberFormatter("en", NumberFormatter::SPELLOUT);
+            $aver_word=ucfirst($f->format($num));
+        }//else
+
+        return $aver_word;
+    }
 
     // public function get_money2(Request $request)
     // {

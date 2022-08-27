@@ -97,7 +97,8 @@
                                             if((int)$months_number ==0){ ?>
                                                 <a href='{{url("installmentPay/$contract->id/$kist_dinar/$month/store")}}' class="btn btn-danger">شهر {{ $month }}</a>
                                             <?php }else{ ?>
-                                                <a href="javascript:void;" class="btn btn-success">شهر {{ $month }}</a>
+                                                <a href='{{url("installmentPay/$contract->id/$contract->date/$month/print_catch")}}' class="btn btn-success">شهر {{ $month }}</a>
+                                                <!-- <a href="javascript:void;" class="btn btn-success">شهر {{ $month }}</a> -->
                                             <?php }
                                         }
                                     ?>

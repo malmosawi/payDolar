@@ -102,7 +102,8 @@
                                         
                                         <a href='{{url("contract/$contract->id/edit")}}' class="btn btn-success" data-toggle="tooltip" data-placement="top" data-original-title="تعديل"><i class="si si-pencil text-dark"></i></a>
                                         <a data-id="{{ $contract->id }}" class="btn btn-danger delete_at" data-toggle="tooltip" data-placement="top" data-original-title="حذف"><i class="si si-trash text-light"></i></a>
-                                            
+                                        <a href='{{url("contract/$contract->id/print_catch")}}' class="btn btn-info" data-toggle="tooltip" data-placement="top" data-original-title="طباعة"><i class="si si-printer text-dark"></i></a>
+                                           
                                     </td>
                                 </tr>
                             @endforeach
