@@ -3,28 +3,51 @@
   <div class="horizontal-mainwrapper container clearfix">
     <nav class="horizontalMenu clearfix">
       <ul class="horizontalMenu-list">
-        <li aria-haspopup="true"><a href="{{url('customers')}}" class="customers"><i class="typcn typcn-arrow-move-outline"></i>الزبائن</a></li>
-        <li aria-haspopup="true"><a href="{{url('suppliers')}}" class="suppliers"><i class="typcn typcn-arrow-move-outline"></i>الموردين</a></li>
-        <li aria-haspopup="true"><a href="{{url('suppliersCatch')}}" class="suppliersCatch"><i class="typcn typcn-arrow-move-outline"></i>القبض من الموردين</a></li>
-        <li aria-haspopup="true"><a href="{{url('suppliersExpenses')}}" class="suppliersExpenses"><i class="typcn typcn-arrow-move-outline"></i>الصرف للموردين</a></li>
-        <li aria-haspopup="true"><a href="{{url('expenses')}}" class="expenses"><i class="typcn typcn-arrow-move-outline"></i>المصاريف</a></li>
-        <li aria-haspopup="true"><a href="{{url('disexpenses')}}" class="disexpenses"><i class="typcn typcn-arrow-move-outline"></i>صرف المصاريف</a></li>
+        <!-- <li aria-haspopup="true"><a href="{{url('customers')}}" class="customers"><i class="typcn typcn-arrow-move-outline"></i>الزبائن</a></li>
+        <li aria-haspopup="true"><a href="{{url('suppliers')}}" class="suppliers"><i class="typcn typcn-arrow-move-outline"></i>الموردين</a></li> -->
+        <!-- <li aria-haspopup="true"><a href="{{url('suppliersCatch')}}" class="suppliersCatch"><i class="typcn typcn-arrow-move-outline"></i>القبض من الموردين</a></li>
+        <li aria-haspopup="true"><a href="{{url('suppliersExpenses')}}" class="suppliersExpenses"><i class="typcn typcn-arrow-move-outline"></i>الصرف للموردين</a></li> -->
+        <!-- <li aria-haspopup="true"><a href="{{url('expenses')}}" class="expenses"><i class="typcn typcn-arrow-move-outline"></i>المصاريف</a></li> -->
+        <!-- <li aria-haspopup="true"><a href="{{url('disexpenses')}}" class="disexpenses"><i class="typcn typcn-arrow-move-outline"></i>صرف المصاريف</a></li>
         <li aria-haspopup="true"><a href="{{url('convertDolarToDinar')}}" class="convertDolarToDinar"><i class="typcn typcn-arrow-move-outline"></i>تحويل الدولار الى دينار</a></li>
         <li aria-haspopup="true"><a href="{{url('convertDinarToDolar')}}" class="convertDinarToDolar"><i class="typcn typcn-arrow-move-outline"></i>تحويل الدينار الى دولار</a></li>
         
         <li aria-haspopup="true"><a href="{{url('contract')}}" class="contract"><i class="typcn typcn-arrow-move-outline"></i>العقد</a></li>
-        <li aria-haspopup="true"><a href="{{url('installmentPay')}}" class="installmentPay"><i class="typcn typcn-arrow-move-outline"></i>التسديد اقساط</a></li>
+        <li aria-haspopup="true"><a href="{{url('installmentPay')}}" class="installmentPay"><i class="typcn typcn-arrow-move-outline"></i>التسديد اقساط</a></li> -->
         
-        <!-- <li aria-haspopup="true"><a href="#" class="sub-icon active"><i class="typcn typcn-device-desktop hor-icon"></i> Dashboard <i class="fa fa-angle-down horizontal-icon"></i></a>
+        <li aria-haspopup="true"><a href="#" class="sub-icon customers suppliers expenses"><i class="typcn typcn-device-desktop hor-icon"></i> العملاء <i class="fa fa-angle-down horizontal-icon"></i></a>
           <ul class="sub-menu">
-            <li aria-haspopup="true"><a href="index.html">Dashboard 01</a></li>
-            <li aria-haspopup="true"><a href="index2.html">Dashboard 02</a></li>
-            <li aria-haspopup="true"><a href="index3.html">Dashboard 03</a></li>
-            <li aria-haspopup="true"><a href="index4.html">Dashboard 04</a></li>
-            <li aria-haspopup="true"><a href="index5.html">Dashboard 05</a></li>
+            <li aria-haspopup="true"><a href="{{url('customers')}}">الزبائن</a></li>
+            <li aria-haspopup="true"><a href="{{url('suppliers')}}">الموردين</a></li>
+            <li aria-haspopup="true"><a href="{{url('expenses')}}">المصاريف</a></li>
           </ul>
         </li>
-        <li aria-haspopup="true"><a href="#" class="sub-icon"><i class="typcn typcn-th-large-outline hor-icon"></i> Apps <i class="fa fa-angle-down horizontal-icon"></i></a>
+
+        <li aria-haspopup="true"><a href="#" class="sub-icon suppliersCatch"><i class="typcn typcn-device-desktop hor-icon"></i> القبض <i class="fa fa-angle-down horizontal-icon"></i></a>
+          <ul class="sub-menu">
+            <li aria-haspopup="true"><a href="{{url('suppliersCatch')}}">القبض من الموردين</a></li>
+          </ul>
+        </li>
+
+        <li aria-haspopup="true"><a href="#" class="sub-icon suppliersExpenses disexpenses"><i class="typcn typcn-device-desktop hor-icon"></i> الصرف <i class="fa fa-angle-down horizontal-icon"></i></a>
+          <ul class="sub-menu">
+            <li aria-haspopup="true"><a href="{{url('suppliersExpenses')}}">الصرف للموردين</a></li>
+            <li aria-haspopup="true"><a href="{{url('disexpenses')}}">صرف المصاريف</a></li>
+          </ul>
+        </li>
+
+        <li aria-haspopup="true"><a href="#" class="sub-icon convertDolarToDinar convertDinarToDolar"><i class="typcn typcn-device-desktop hor-icon"></i> التحويل <i class="fa fa-angle-down horizontal-icon"></i></a>
+          <ul class="sub-menu">
+            <li aria-haspopup="true"><a href="{{url('convertDolarToDinar')}}">تحويل الدولار الى دينار</a></li>
+            <li aria-haspopup="true"><a href="{{url('convertDinarToDolar')}}">تحويل الدينار الى دولار</a></li>
+          </ul>
+        </li>
+
+        <li aria-haspopup="true"><a href="{{url('contract')}}" class="contract"><i class="typcn typcn-arrow-move-outline"></i>العقد</a></li>
+        <li aria-haspopup="true"><a href="{{url('installmentPay')}}" class="installmentPay"><i class="typcn typcn-arrow-move-outline"></i>التسديد اقساط</a></li>
+        
+        
+        <!-- <li aria-haspopup="true"><a href="#" class="sub-icon"><i class="typcn typcn-th-large-outline hor-icon"></i> Apps <i class="fa fa-angle-down horizontal-icon"></i></a>
           <ul class="sub-menu">
             <li aria-haspopup="true"><a href="cards.html">Cards design</a></li>
             <li aria-haspopup="true"><a href="cards-image.html">Image  Cards design</a></li>
