@@ -70,31 +70,83 @@ class InstallmentPayController extends Controller
 
     }
 
-
-    public function store($id_contract ,$kist_dinar, $month)
+    public function store(Request $request , $id_contract ,$modal_id, $month)
     {
+        $request->session()->flash('show', $modal_id);
+
+        $rules = [
+            'name_customer' => ['required', 'regex:/(^([\p{Arabic}a-zA-z0-9 ]+)?$)/u' , 'max:255'],
+            'money' => ['required','regex:/(^([\p{Arabic}a-zA-z0-9.,()-\/ ]+)?$)/u' , 'max:255'],
             
-        $contract = DB::table('contract')->where('id', '=', $id_contract )->orderBy('id', 'DESC')->get();
-                            
-        $installmentPay = new InstallmentPay;
-        $installmentPay->id_contract = $contract[0]->id;
-        $installmentPay->date_contract = $contract[0]->date;
-        $installmentPay->money = str_replace("," , '', $kist_dinar);
-        $installmentPay->exchange_rate = $contract[0]->exchange_rate;
-        $installmentPay->months_number = $month;
-        $installmentPay->date = date("Y-m-d");
-        $installmentPay->user_created = Auth::user()->username;
-        $installmentPay->save();
+            
+        ];
 
-        $dinar_box = DB::table('setting')->where('id', '=', 1 )->sum('dinar_box');
-        $plus = $dinar_box+(int)str_replace("," , '', $kist_dinar);
+        $customMessages = [
+            'name_customer.required' => 'الاسم يجب ان لا يترك فارغاً.',
+            'name_customer.regex' => 'الاسم يجب ان يحتوي على احرف وارقام فقط.',
+            'money.required' => 'المبلغ يجب ان لا يترك فارغاً.',
+            'money.regex' => 'المبلغ يجب ان يحتوي على ارقام فقط.',       
+        ];
 
-        $data=array('dinar_box'=>$plus);
-        DB::table('setting')->where('id','=', 1)->update($data);
+            
+        $validator = Validator::make($request->all(), $rules, $customMessages);
+        
+        if($validator->fails()){
+          return back()->withErrors($validator->errors())->withInput();
+        }else{
 
-        return redirect('installmentPay');
+            $contract = DB::table('contract')->where([['id', '=', $id_contract ] , ['deleted_at' ,'=' , null ] ])->orderBy('id', 'DESC')->get();
+                                
+            $installmentPay = new InstallmentPay;
+            $installmentPay->id_contract = $contract[0]->id;
+            $installmentPay->date_contract = $contract[0]->date;
+            $installmentPay->money = str_replace("," , '', $request->input('money'));
+            $installmentPay->exchange_rate = $contract[0]->exchange_rate;
+            $installmentPay->months_number = $month;
+            $installmentPay->date = date("Y-m-d");
+            $installmentPay->user_created = Auth::user()->username;
+            $installmentPay->save();
+
+            $dinar_box = DB::table('setting')->where('id', '=', 1 )->sum('dinar_box');
+            $plus = $dinar_box+(int)str_replace("," , '', str_replace("," , '', $request->input('money')) );
+
+            $data=array('dinar_box'=>$plus);
+            DB::table('setting')->where('id','=', 1)->update($data);
+
+            $id_contract=$contract[0]->id;
+            $date_contract=$contract[0]->date;
+            return redirect("installmentPay/$id_contract/$date_contract/$month/print_catch");
+
+        }//else
         
     }
+
+
+    // public function store($id_contract ,$kist_dinar, $month)
+    // {
+            
+    //     $contract = DB::table('contract')->where('id', '=', $id_contract )->orderBy('id', 'DESC')->get();
+                            
+    //     $installmentPay = new InstallmentPay;
+    //     $installmentPay->id_contract = $contract[0]->id;
+    //     $installmentPay->date_contract = $contract[0]->date;
+    //     $installmentPay->money = str_replace("," , '', $kist_dinar);
+    //     $installmentPay->exchange_rate = $contract[0]->exchange_rate;
+    //     $installmentPay->months_number = $month;
+    //     $installmentPay->date = date("Y-m-d");
+    //     $installmentPay->user_created = Auth::user()->username;
+    //     $installmentPay->save();
+
+    //     $dinar_box = DB::table('setting')->where('id', '=', 1 )->sum('dinar_box');
+    //     $plus = $dinar_box+(int)str_replace("," , '', $kist_dinar);
+
+    //     $data=array('dinar_box'=>$plus);
+    //     DB::table('setting')->where('id','=', 1)->update($data);
+
+    //     return redirect('installmentPay');
+        
+    // }
+
 
 
     public function print_catch($id_contract ,$date_contract, $month)

@@ -110,7 +110,8 @@ Route::group(['middleware' => 'auth'], function() {
     Route::get('contract/{id}/print_catch', [ContractController::class, 'print_catch'])->name('contract.print_catch');
 
     Route::get('installmentPay', [InstallmentPayController::class, 'default'])->name('installmentPay.default');
-    Route::get('installmentPay/{id_contract}/{kist_dinar}/{month}/store', [InstallmentPayController::class, 'store'])->name('installmentPay.store');
+    //Route::get('installmentPay/{id_contract}/{kist_dinar}/{month}/store', [InstallmentPayController::class, 'store'])->name('installmentPay.store');
+    Route::post('installmentPay/{id_contract}/{modal_id}/{month}/store', [InstallmentPayController::class, 'store'])->name('installmentPay.store');
     Route::get('installmentPay/{id_contract}/{date_contract}/{month}/print_catch', [InstallmentPayController::class, 'print_catch'])->name('installmentPay.print_catch');
     //Route::get('installmentPay/get_table', [InstallmentPayController::class, 'get_table'])->name('installmentPay.get_table');
     
