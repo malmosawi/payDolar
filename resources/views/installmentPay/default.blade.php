@@ -74,7 +74,7 @@
                                     $customers = DB::table('customers')->where([['id', '=', $contract->id_customers ] , ['deleted_at' , '=' , null ]])->orderBy('id', 'DESC')->get();
                                     $money_dinar = (((int)$contract->money/100)*(int)$contract->exchange_rate);
                                     $kist_dinar = ((int)$money_dinar/(int)$contract->months_number);
-                                    $kist_dinar2 = preg_replace("/\B(?=(\d{3})+(?!\d))/", ",", ((int)$money_dinar/(int)$contract->months_number) );
+                                    $kist_dinar2 = preg_replace("/\B(?=(\d{3})+(?!\d))/", ",", $kist_dinar );
                                     $money_customers= DB::table('installment_pay')->where([['id_contract', '=', $contract->id ] , ['date_contract' , '=' , $contract->date ]])->sum('money');
                                 ?>
 
@@ -103,7 +103,7 @@
                                             <?php }else{ ?>
                                                 <a href='{{url("installmentPay/$contract->id/$contract->date/$month/print_catch")}}' class="btn btn-success">شهر {{ $month }}</a>
                                                 <!-- <a href="javascript:void;" class="btn btn-success">شهر {{ $month }}</a> -->
-                                            <?php } ?>
+                                            <?php }//else ?>
 
                                         <div class="modal fade" data-backdrop="static" id="modal_{{$modal_id}}" tabindex="-1" role="dialog" aria-labelledby="addContactModalTitle" aria-hidden="true">
                                             <div class="modal-dialog modal-dialog-centered" role="document">
@@ -133,7 +133,7 @@
                                                                 
                                                                 </center>
 
-                                                                <form action="{{route('installmentPay.store', ['id_contract' => $contract->id , 'modal_id' => $modal_id , 'month' =>$month] )}}" id="addContactModalTitle" autocomplete="off" class="appForm clearfix" method="post" enctype="multipart/form-data">
+                                                                <form action="{{route('installmentPay.store', ['id_contract' => $contract->id , 'modal_id' => $modal_id , 'month' =>$month] )}}" id="addContactModalTitle" autocomplete="on" class="appForm clearfix" method="post" enctype="multipart/form-data">
                                                                 @csrf  
                                                                     <div class="row text-right">
                                                                         
@@ -206,40 +206,5 @@
         $("#modal_{{ session()->get('show') }}").modal('show');
     @endif
 
-    // $(document).ready(function() {
-
-    //     $('#single').change(function(){
-            
-    //         var id_customers = $('#single').val();
-    //         var date = $('#single option').data("description");
-    //         var id_contract = $('#single option').data("id");
-    //         // alert(date);
-
-    //         $.ajax({
-    //             type: "POST",
-    //             url: "{{ url('installmentPay/get_table')}}",
-    //             method:"get",//web page
-    //             dataType:"json",
-    //             data:{
-    //                 "id_customers": id_customers,
-    //                 "id_contract": id_contract,
-    //                 "date": date,
-    //                 "_token": "{{ csrf_token() }}",
-    //             },
-    //             success: function(reponse) {
-
-                    
-    //                 //alert(reponse.data);
-    //                 $(".tbl").html(reponse.data);
-                    
-    //                 // $('#month_store').click(function(){
-    //                 //     $("#money").val($(".kist_dinar").text());
-    //                 // });
-    //             } //success
-    //         });
-                
-    //     });
-        
-    // });
 </script>
 @endsection

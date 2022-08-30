@@ -108,7 +108,7 @@ class InstallmentPayController extends Controller
             $installmentPay->save();
 
             $dinar_box = DB::table('setting')->where('id', '=', 1 )->sum('dinar_box');
-            $plus = $dinar_box+(int)str_replace("," , '', str_replace("," , '', $request->input('money')) );
+            $plus = $dinar_box+(int)str_replace("," , '', $request->input('money') );
 
             $data=array('dinar_box'=>$plus);
             DB::table('setting')->where('id','=', 1)->update($data);
