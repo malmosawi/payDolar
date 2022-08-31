@@ -67,8 +67,8 @@
                                 </tr>
                             </thead>
                             <tbody>
-                            @if(contracts != false)
-                            
+                            @if($contracts !== false)
+
                                 @foreach($contracts as $key=>$contract)
                             
                                 <?php 
