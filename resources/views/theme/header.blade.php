@@ -6,16 +6,16 @@
 				<img src="{{asset('assets/images/brand/logo.png')}}" class="header-brand-img main-logo" alt="Hogo logo">
 				<img src="{{asset('assets/images/brand/icon.png')}}" class="header-brand-img icon-logo" alt="Hogo logo">
 			</a><!-- logo-->
-			<a id="horizontal-navtoggle" class="animated-arrow hor-toggle"><span></span></a>
-			<a href="#" data-toggle="search" class="nav-link nav-link  navsearch"><i class="fa fa-search"></i></a><!-- search icon -->
-			<div class="header-form">
+			<!-- <a id="horizontal-navtoggle" class="animated-arrow hor-toggle"><span></span></a> -->
+			<!-- <a href="#" data-toggle="search" class="nav-link nav-link  navsearch"><i class="fa fa-search"></i></a>search icon -->
+			<!-- <div class="header-form">
 				<form class="form-inline">
 					<div class="search-element ml-3">
 						<input class="form-control" type="search" placeholder="Search" aria-label="Search">
 						<span class="Search-icon"><i class="fa fa-search"></i></span>
 					</div>
-				</form><!-- search-bar -->
-			</div>
+				</form>
+			</div> -->
 			
 			<ul class="nav header-nav">
 
@@ -32,7 +32,7 @@
 						<i class="fe fe-maximize-2"></i>
 					</a>
 				</div><!-- full-screen -->
-				<div class="dropdown header-notify">
+				<!-- <div class="dropdown header-notify">
 					<a class="nav-link icon" data-toggle="dropdown" aria-expanded="false">
 						<i class="fe fe-bell "></i>
 						<span class="pulse bg-success"></span>
@@ -79,7 +79,8 @@
 						<div class="dropdown-divider"></div>
 						<a href="#" class="dropdown-item text-center">View all Notifications</a>
 					</div>
-				</div><!-- notifications -->
+				</div> -->
+				<!-- notifications -->
 				<div class="dropdown header-user">
 					<a class="nav-link leading-none siderbar-link"  data-toggle="sidebar-left" data-target=".sidebar-left">
 						<span class="ml-3 d-none d-lg-block ">
