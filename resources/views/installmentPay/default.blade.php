@@ -57,10 +57,10 @@
                             <thead class="bg-primary font-weight-bold">
                                 <tr>
                                     <th class="wd-20p">اسم الزبون</th>
-                                    <th class="wd-20p">المبلغ مع النسبة المضافة (دينار)</th>
+                                    <th class="wd-20p">المبلغ مع الفائدة (دينار)</th>
                                     <!-- <th class="wd-20p">سعر الصرف (بالدينار)</th> -->
                                     <!-- <th class="wd-20p">القسط الشهري (دولار)</th> -->
-                                    <th class="wd-20p">القسط الشهري مع النسبة المضافة (دينار)</th>
+                                    <th class="wd-20p">القسط الشهري مع الفائدة (دينار)</th>
                                     <th class="wd-20p">المبلغ المسدد (دينار)</th>
                                     <th class="wd-20p">تاريخ العقد</th>
                                     <th class="wd-20p">التسديد اقساط</th>
@@ -72,21 +72,24 @@
                                 @foreach($contracts as $key=>$contract)
                             
                                 <?php 
-                                    $customers = DB::table('customers')->where([['id', '=', $contract->id_customers ] , ['deleted_at' , '=' , null ]])->orderBy('id', 'DESC')->get();
-                                    $money_dinar = (((int)$contract->money/100)*(int)$contract->exchange_rate);
-                                    $kist_dinar = ((int)$money_dinar/(int)$contract->months_number);
-                                    $kist_dinar2 = preg_replace("/\B(?=(\d{3})+(?!\d))/", ",", $kist_dinar );
-                                    $money_customers= DB::table('installment_pay')->where([['id_contract', '=', $contract->id ] , ['date_contract' , '=' , $contract->date ]])->sum('money');
+                                    $customers = DB::table('customers')->where([['id', '=', $contract->id_customers ] , ['deleted_at' , '=' , null ]])->orderBy('id', 'DESC')->first();
+                                    // $money_dinar = (((int)$contract->money/100)*(int)$contract->exchange_rate);
+                                    // $kist_dinar = ((int)$money_dinar/(int)$contract->months_number);
+                                    $kist_dinar = preg_replace("/\B(?=(\d{3})+(?!\d))/", ",", $contract->money_month );
+                                    $money_customers= DB::table('installment_pay')->where([['id_contract', '=', $contract->id ] , ['date_contract' , '=' , $contract->date ]])->sum('money_month');
                                 ?>
 
+                                @if( (int)$contract->money_dinar != (int)$money_customers )
                                 <tr>
-                                    <td>{{ $customers[0]->name }}</td>
-                                    <td><?php echo preg_replace("/\B(?=(\d{3})+(?!\d))/", ",", $money_dinar ); ?></td>
-                                    <td><?php echo preg_replace("/\B(?=(\d{3})+(?!\d))/", ",", $kist_dinar ); ?></td>
+                                    <td>{{ $customers->name }}</td>
+                                    <td><?php echo preg_replace("/\B(?=(\d{3})+(?!\d))/", ",", $contract->money_dinar ); ?></td>
+                                    <td><?php echo preg_replace("/\B(?=(\d{3})+(?!\d))/", ",", $contract->money_month ); ?></td>
                                     <td><?php echo preg_replace("/\B(?=(\d{3})+(?!\d))/", ",", $money_customers ); ?></td>
                                     <td>{{ $contract->date }}</td>
                                     <td>
                                         <?php
+                                        if($contract->date!='' || $contract->date!=null){
+
                                         $arr = explode('-', $contract->date);
                                         for ($i=1; $i <= $contract->months_number ; $i++) { 
 
@@ -102,7 +105,7 @@
                                                 {{--url("installmentPay/$contract->id/$kist_dinar/$month/store")--}}
                                                 <a data-toggle='modal' data-target="#modal_{{$modal_id}}" href="javascript:void(0);" class="btn btn-danger">شهر {{ $month }}</a>
                                             <?php }else{ ?>
-                                                <a href='{{url("installmentPay/$contract->id/$contract->date/$month/print_catch")}}' class="btn btn-success">شهر {{ $month }}</a>
+                                                <a href='{{url("installmentPay/$contract->id/$contract->date/$month/print_catch")}}' class="btn btn-info">شهر {{ $month }}</a>
                                                 <!-- <a href="javascript:void;" class="btn btn-success">شهر {{ $month }}</a> -->
                                             <?php }//else ?>
 
@@ -141,14 +144,14 @@
                                                                         <div class="col-md-12">
                                                                             <div class="form-group">
                                                                                 <label class="form-label">اسم الزبون</label>
-                                                                                <input type="text" readonly class="form-control @error('name_customer') is-invalid state-invalid @enderror" name="name_customer" id="name_customer" value="{{ old('name_customer')!=''? old('name_customer') : $customers[0]->name }}" placeholder="">
+                                                                                <input type="text" readonly class="form-control @error('name_customer') is-invalid state-invalid @enderror" name="name_customer" id="name_customer" value="{{ old('name_customer')!=''? old('name_customer') : $customers->name }}" placeholder="">
                                                                             </div>
                                                                         </div>
 
                                                                         <div class="col-md-12">
                                                                             <div class="form-group">
                                                                                 <label class="form-label">القسط الشهري (دينار)</label>
-                                                                                <input type="text" class="form-control @error('money') is-invalid state-invalid @enderror" name="money" id="money" value="{{ old('money')!=''? old('money') : $kist_dinar2 }}" placeholder="">
+                                                                                <input type="text" class="form-control @error('money_month') is-invalid state-invalid @enderror" name="money_month" id="money_month" value="{{ old('money_month')!=''? old('money_month') : $kist_dinar }}" placeholder="">
                                                                             </div>
                                                                         </div>
 
@@ -173,12 +176,13 @@
                                         </div>
 
                                         <?php } ?>
-                                        
+                                        <?php }//if ?>
                                     </td>
                                 </tr>
-                               
+                                
+                                @endif 
                                 @endforeach
-
+                                
                             @endif 
 
                             </tbody>

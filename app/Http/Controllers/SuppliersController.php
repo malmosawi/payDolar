@@ -4,11 +4,15 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Collection;
 use App\Models\Suppliers;
 use App\Models\User;
 use DB;
 use App;
 use Auth;
+use PDF;
+use NumberFormatter;
+Use Alert;
 
 class SuppliersController extends Controller
 {
@@ -105,7 +109,8 @@ class SuppliersController extends Controller
             $supplier->user_created = Auth::user()->username;
             $supplier->save();
 
-            $request->session()->flash('success', 'تمت الإضافة بنجاح.');
+            toast('تمت الإضافة بنجاح.','success');
+            //$request->session()->flash('success', 'تمت الإضافة بنجاح.');
             return redirect('suppliers');
         }
 
@@ -211,7 +216,8 @@ class SuppliersController extends Controller
             $supplier->user_updated = Auth::user()->username;
             $supplier->save();
 
-            $request->session()->flash('success', 'تم التعديل بنجاح.');
+            toast('تم التعديل بنجاح.','success');
+            // $request->session()->flash('success', 'تم التعديل بنجاح.');
             return redirect('suppliers');
         }
         
@@ -231,6 +237,152 @@ class SuppliersController extends Controller
 
         return response()->json($response);
         
+    }
+
+
+    public function show($id)
+    {   
+        PDF::SetTitle('PDF');
+        PDF::AddPage();
+        PDF::SetRTL(true);
+        PDF::setPageFormat('A4','P');
+        PDF::SetFont('arial','',11);
+
+        $suppliers = DB::table('suppliers')->where([['id', '=', $id ],['deleted_at','=', null ]])->orderBy('id', 'DESC')->get();
+
+        $html1='';
+        if(false !== $suppliers){
+            $html1 .= '<table style=" align:center; text-align:center; margin:5px; padding:5px; width:100%;" >';
+            $html1 .= '<tr style=" border:1px solid black;"><th style=" border:1px solid black; background-color:#f3f3f4;" ><p style="font-size:12px; font-family:arialbd;">تسلسل</p></th><th style=" border:1px solid black; background-color:#f3f3f4;" ><p style="font-size:12px; font-family:arialbd;">إسم المورد</p></th><th style=" border:1px solid black; background-color:#f3f3f4;" ><p style="font-size:12px; font-family:arialbd;">العملية</p></th><th style=" border:1px solid black; background-color:#f3f3f4;" ><p style="font-size:12px; font-family:arialbd;">المبلغ (بالدولار)</p></th><th style=" border:1px solid black; background-color:#f3f3f4;" ><p style="font-size:12px; font-family:arialbd;">التاريخ</p></th></tr>';
+        
+            $c = 1;
+            $x= PDF::getY();
+            
+            foreach($suppliers as $supplier){
+                
+                $catchs = DB::table('suppliers_catch')->where([['id_suppliers', '=', $supplier->id] , ['deleted_at','=', null ]])->select(['*', DB::raw("'قبض' as op")])->get();
+                $expenses = DB::table('suppliers_expenses')->where([['id_suppliers', '=', $supplier->id] , ['deleted_at','=', null ]])->select(['*', DB::raw("'صرف' as op")])->get();
+
+                // $inners = DB::table('suppliers')->join('suppliers_expenses', 'suppliers.id', '=', 'suppliers_expenses.id_suppliers')->join('suppliers_catch', 'suppliers.id', '=', 'suppliers_catch.id_suppliers')->select('suppliers.*', 'suppliers_catch.money as m1', 'suppliers_expenses.money as m2')->where('suppliers.id', '=', $supplier->id)->get();
+           
+                $mergeTbl = $catchs->merge($expenses)->sortBy('date');//->sortByDesc('date');
+                // dd($catchs);
+
+                foreach($mergeTbl as $inner){
+
+                    if ($x < (PDF::getPageHeight() - 100)) {
+
+                        $html1 .= '<tr style=" border:1px solid black;"><td style=" border:1px solid black; ">'.$c.'</td><td style=" border:1px solid black; ">'.$supplier->name.'</td><td style=" border:1px solid black; ">'.$inner->op.'</td><td style=" border:1px solid black; ">'.preg_replace("/\B(?=(\d{3})+(?!\d))/", ",", $inner->money ).'</td><td style=" border:1px solid black; ">'.$inner->date.'</td></tr>';
+                        $x=$x+10;
+                        $c=$c+1;
+                    }else{
+                        $html1 .= '</table>';
+                        $y= PDF::GetY();
+                        PDF::SetXY(0,$y+5);
+                        PDF::SetLeftMargin(5);
+                        PDF::SetRightMargin(5);
+                        PDF::WriteHtml($html1,true,false,false,true,'C');
+                        PDF::AddPage();
+                        PDF::SetRTL(true);
+                        PDF::setPageFormat('A4','L');
+                        PDF::SetFont('arial','',11);
+                        PDF::SetLeftMargin(5);
+                        PDF::SetRightMargin(5);
+                        $html1='';
+                        $html1 .= '<table style=" align:center; text-align:center; margin:5px; padding:5px; width:100%;" >';
+                        $html1 .= '<tr style=" border:1px solid black;"><th style=" border:1px solid black; background-color:#f3f3f4;" ><p style="font-size:12px; font-family:arialbd;">تسلسل</p></th><th style=" border:1px solid black; background-color:#f3f3f4;" ><p style="font-size:12px; font-family:arialbd;">إسم المورد</p></th><th style=" border:1px solid black; background-color:#f3f3f4;" ><p style="font-size:12px; font-family:arialbd;">العملية</p></th><th style=" border:1px solid black; background-color:#f3f3f4;" ><p style="font-size:12px; font-family:arialbd;">المبلغ (بالدولار)</p></th><th style=" border:1px solid black; background-color:#f3f3f4;" ><p style="font-size:12px; font-family:arialbd;">التاريخ</p></th></tr>';
+                        $x= PDF::getY();
+                    }//else
+
+                }//foreach_inner
+        
+            }//foreach_suppliers
+
+            $html1 .= '</table>';
+            $y= PDF::GetY();
+            PDF::SetXY(0,$y+5);
+            PDF::SetLeftMargin(5);
+            PDF::SetRightMargin(5);
+            PDF::WriteHtml($html1,true,false,false,true,'C');
+        
+        }//if visits
+
+        PDF::Output('suppliers.pdf');  
+
+
+    }
+
+
+    public function showAll()
+    {   
+        PDF::SetTitle('PDF');
+        PDF::AddPage();
+        PDF::SetRTL(true);
+        PDF::setPageFormat('A4','P');
+        PDF::SetFont('arial','',11);
+
+        $suppliers = DB::table('suppliers')->where([['id', '<>', null ],['deleted_at','=', null ]])->orderBy('id', 'DESC')->get();
+
+        $html1='';
+        if(false !== $suppliers){
+            $html1 .= '<table style=" align:center; text-align:center; margin:5px; padding:5px; width:100%;" >';
+            $html1 .= '<tr style=" border:1px solid black;"><th style=" border:1px solid black; background-color:#f3f3f4;" ><p style="font-size:12px; font-family:arialbd;">تسلسل</p></th><th style=" border:1px solid black; background-color:#f3f3f4;" ><p style="font-size:12px; font-family:arialbd;">إسم المورد</p></th><th style=" border:1px solid black; background-color:#f3f3f4;" ><p style="font-size:12px; font-family:arialbd;">العملية</p></th><th style=" border:1px solid black; background-color:#f3f3f4;" ><p style="font-size:12px; font-family:arialbd;">المبلغ (بالدولار)</p></th><th style=" border:1px solid black; background-color:#f3f3f4;" ><p style="font-size:12px; font-family:arialbd;">التاريخ</p></th></tr>';
+        
+            $c = 1;
+            $x= PDF::getY();
+            
+            foreach($suppliers as $supplier){
+                
+                $catchs = DB::table('suppliers_catch')->where([['id_suppliers', '=', $supplier->id] , ['deleted_at','=', null ]])->select(['*', DB::raw("'قبض' as op")])->get();
+                $expenses = DB::table('suppliers_expenses')->where([['id_suppliers', '=', $supplier->id] , ['deleted_at','=', null ]])->select(['*', DB::raw("'صرف' as op")])->get();
+
+                // $inners = DB::table('suppliers')->join('suppliers_expenses', 'suppliers.id', '=', 'suppliers_expenses.id_suppliers')->join('suppliers_catch', 'suppliers.id', '=', 'suppliers_catch.id_suppliers')->select('suppliers.*', 'suppliers_catch.money as m1', 'suppliers_expenses.money as m2')->where('suppliers.id', '=', $supplier->id)->get();
+           
+                $mergeTbl = $catchs->merge($expenses)->sortBy('date');//->sortByDesc('date');
+                // dd($catchs);
+
+                foreach($mergeTbl as $inner){
+
+                    if ($x < (PDF::getPageHeight() - 100)) {
+
+                        $html1 .= '<tr style=" border:1px solid black;"><td style=" border:1px solid black; ">'.$c.'</td><td style=" border:1px solid black; ">'.$supplier->name.'</td><td style=" border:1px solid black; ">'.$inner->op.'</td><td style=" border:1px solid black; ">'.preg_replace("/\B(?=(\d{3})+(?!\d))/", ",", $inner->money ).'</td><td style=" border:1px solid black; ">'.$inner->date.'</td></tr>';
+                        $x=$x+10;
+                        $c=$c+1;
+                    }else{
+                        $html1 .= '</table>';
+                        $y= PDF::GetY();
+                        PDF::SetXY(0,$y+5);
+                        PDF::SetLeftMargin(5);
+                        PDF::SetRightMargin(5);
+                        PDF::WriteHtml($html1,true,false,false,true,'C');
+                        PDF::AddPage();
+                        PDF::SetRTL(true);
+                        PDF::setPageFormat('A4','L');
+                        PDF::SetFont('arial','',11);
+                        PDF::SetLeftMargin(5);
+                        PDF::SetRightMargin(5);
+                        $html1='';
+                        $html1 .= '<table style=" align:center; text-align:center; margin:5px; padding:5px; width:100%;" >';
+                        $html1 .= '<tr style=" border:1px solid black;"><th style=" border:1px solid black; background-color:#f3f3f4;" ><p style="font-size:12px; font-family:arialbd;">تسلسل</p></th><th style=" border:1px solid black; background-color:#f3f3f4;" ><p style="font-size:12px; font-family:arialbd;">إسم المورد</p></th><th style=" border:1px solid black; background-color:#f3f3f4;" ><p style="font-size:12px; font-family:arialbd;">العملية</p></th><th style=" border:1px solid black; background-color:#f3f3f4;" ><p style="font-size:12px; font-family:arialbd;">المبلغ (بالدولار)</p></th><th style=" border:1px solid black; background-color:#f3f3f4;" ><p style="font-size:12px; font-family:arialbd;">التاريخ</p></th></tr>';
+                        $x= PDF::getY();
+                    }//else
+
+                }//foreach_inner
+        
+            }//foreach_suppliers
+
+            $html1 .= '</table>';
+            $y= PDF::GetY();
+            PDF::SetXY(0,$y+5);
+            PDF::SetLeftMargin(5);
+            PDF::SetRightMargin(5);
+            PDF::WriteHtml($html1,true,false,false,true,'C');
+        
+        }//if visits
+
+        PDF::Output('suppliers.pdf');  
+
+
     }
 
 

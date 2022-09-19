@@ -12,11 +12,11 @@
 
     <!-- page-header -->
     <div class="page-header">
-        <div class="mr-auto">
+        <!-- <div class="mr-auto">
             <div class="input-group">
                 <a class="btn btn-primary ml-5 mt-4 mt-sm-0" href="{{ url('suppliersExpenses/create') }}"> صرف <i class="fe fe-plus ml-1 mt-1"></i></a>
             </div>
-        </div>
+        </div> -->
     </div>
     <!-- End page-header -->
 
@@ -79,9 +79,9 @@
                                     <td>{{ $supplier_expenses->date }}</td>
                                     <td>
                                         
-                                        <a href='{{url("suppliersExpenses/$supplier_expenses->id/edit")}}' class="btn btn-success" data-toggle="tooltip" data-placement="top" data-original-title="تعديل"><i class="si si-pencil text-dark"></i></a>
+                                        <a href='{{url("suppliersExpenses/$supplier_expenses->id/edit")}}' class="btn btn-info" data-toggle="tooltip" data-placement="top" data-original-title="تعديل"><i class="si si-pencil text-light"></i></a>
                                         <a data-id="{{ $supplier_expenses->id }}" class="btn btn-danger delete_at" data-toggle="tooltip" data-placement="top" data-original-title="حذف"><i class="si si-trash text-light"></i></a>
-                                        <a href='{{url("suppliersExpenses/$supplier_expenses->id/print_catch")}}' class="btn btn-info" data-toggle="tooltip" data-placement="top" data-original-title="طباعة"><i class="si si-printer text-dark"></i></a>
+                                        <a href='{{url("suppliersExpenses/$supplier_expenses->id/print_catch")}}' class="btn btn-gray" data-toggle="tooltip" data-placement="top" data-original-title="طباعة"><i class="si si-printer text-light"></i></a>
                                            
                                     </td>
                                 </tr>

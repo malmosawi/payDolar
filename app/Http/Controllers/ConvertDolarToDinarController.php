@@ -9,6 +9,7 @@ use App\Models\User;
 use DB;
 use App;
 use Auth;
+Use Alert;
 
 class ConvertDolarToDinarController extends Controller
 {
@@ -28,8 +29,8 @@ class ConvertDolarToDinarController extends Controller
         $rules = [
             'dolar_box' => ['required','regex:/(^([\p{Arabic}a-zA-z0-9.,()-\/ ]+)?$)/u' , 'max:255'],
             'dinar_box' => ['required','regex:/(^([\p{Arabic}a-zA-z0-9.,()-\/ ]+)?$)/u' , 'max:255'],
-            'money_dolar' => ['required','regex:/(^([\p{Arabic}a-zA-z0-9.,()-\/ ]+)?$)/u' , 'max:255'],
-            'money_dinar' => ['required','regex:/(^([\p{Arabic}a-zA-z0-9.,()-\/ ]+)?$)/u' , 'max:255'],
+            'money_dolar' => ['required','regex:/(^([0-9,]+)?$)/u' , 'max:255'],
+            'money_dinar' => ['required','regex:/(^([0-9,]+)?$)/u' , 'max:255'],
             'exchange_rate' => ['required', 'regex:/(^([\p{Arabic}a-zA-z0-9.,()-\/ ]+)?$)/u' , 'max:255'],
             'date' => ['required', 'date' , 'max:255'],
             
@@ -60,6 +61,7 @@ class ConvertDolarToDinarController extends Controller
 
             if((int)$m3 > (int)$m1){
 
+                toast('مبلغ الدولار اكبر من صندوق الدولار','error'); 
                 return back()->with('error', 'مبلغ الدولار اكبر من صندوق الدولار');
 
             }else{
@@ -82,7 +84,8 @@ class ConvertDolarToDinarController extends Controller
                 $data=array('dolar_box'=>$minus , 'dinar_box'=>$plus);
                 DB::table('setting')->where('id','=', 1)->update($data);
 
-                $request->session()->flash('success', 'تمت الإضافة بنجاح.');
+                toast('تمت الإضافة بنجاح.','success');
+                // $request->session()->flash('success', 'تمت الإضافة بنجاح.');
                 return redirect('convertDolarToDinar');
 
             }
@@ -93,8 +96,8 @@ class ConvertDolarToDinarController extends Controller
 
     public function edit($id)
     {   
-        $convertDolarToDinars = DB::table('convertDolarToDinar')->where([['id', '=', $id] , ['deleted_at' , '=' , null ]])->get();
-        return view('convertDolarToDinar/edit',['convertDolarToDinars'=>$convertDolarToDinars]);
+        $convertDolarToDinar = DB::table('convertDolarToDinar')->where([['id', '=', $id] , ['deleted_at' , '=' , null ]])->get();
+        return view('convertDolarToDinar/edit',['convertDolarToDinar'=>$convertDolarToDinar]);
         
     }
 
@@ -104,8 +107,8 @@ class ConvertDolarToDinarController extends Controller
         $rules = [
             'dolar_box' => ['required','regex:/(^([\p{Arabic}a-zA-z0-9.,()-\/ ]+)?$)/u' , 'max:255'],
             'dinar_box' => ['required','regex:/(^([\p{Arabic}a-zA-z0-9.,()-\/ ]+)?$)/u' , 'max:255'],
-            'money_dolar' => ['required','regex:/(^([\p{Arabic}a-zA-z0-9.,()-\/ ]+)?$)/u' , 'max:255'],
-            'money_dinar' => ['required','regex:/(^([\p{Arabic}a-zA-z0-9.,()-\/ ]+)?$)/u' , 'max:255'],
+            'money_dolar' => ['required','regex:/(^([0-9,]+)?$)/u' , 'max:255'],
+            'money_dinar' => ['required','regex:/(^([0-9,]+)?$)/u' , 'max:255'],
             'exchange_rate' => ['required', 'regex:/(^([\p{Arabic}a-zA-z0-9.,()-\/ ]+)?$)/u' , 'max:255'],
             'date' => ['required', 'date' , 'max:255'],
             
@@ -136,6 +139,7 @@ class ConvertDolarToDinarController extends Controller
 
             if((int)$m3 > ((int)$m1+(int)$old_money_dolar)){
 
+                toast('مبلغ الدولار اكبر من صندوق الدولار','error');
                 return back()->with('error', 'مبلغ الدولار اكبر من صندوق الدولار');
 
             }else{
@@ -158,7 +162,8 @@ class ConvertDolarToDinarController extends Controller
                 $data=array('dolar_box'=>$minus , 'dinar_box'=>$plus);
                 DB::table('setting')->where('id','=', 1)->update($data);
 
-                $request->session()->flash('success', 'تم التعديل بنجاح.');
+                toast('تم التعديل بنجاح.','success');
+                // $request->session()->flash('success', 'تم التعديل بنجاح.');
                 return redirect('convertDolarToDinar');
 
             }

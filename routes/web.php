@@ -53,6 +53,8 @@ Route::group(['middleware' => 'auth'], function() {
     Route::get('suppliers/{id}/edit', [SuppliersController::class, 'edit'])->name('suppliers.edit');
     Route::post('suppliers/{id}/update', [SuppliersController::class, 'update'])->name('suppliers.update');
     Route::get('suppliers/destroy', [SuppliersController::class, 'destroy'])->name('suppliers.destroy');
+    Route::get('suppliers/{id}/show', [SuppliersController::class, 'show'])->name('suppliers.show');
+    Route::get('suppliers/showAll', [SuppliersController::class, 'showAll'])->name('suppliers.showAll');
     
 
     Route::get('suppliersExpenses', [SuppliersExpensesController::class, 'default'])->name('suppliersExpenses.default');
@@ -79,6 +81,8 @@ Route::group(['middleware' => 'auth'], function() {
     Route::get('expenses/{id}/edit', [ExpensesController::class, 'edit'])->name('expenses.edit');
     Route::post('expenses/{id}/update', [ExpensesController::class, 'update'])->name('expenses.update');
     Route::get('expenses/destroy', [ExpensesController::class, 'destroy'])->name('expenses.destroy');
+    Route::get('expenses/{id}/show', [ExpensesController::class, 'show'])->name('expenses.show');
+    Route::get('expenses/showAll', [ExpensesController::class, 'showAll'])->name('expenses.showAll');
 
     Route::get('disexpenses', [DisExpensesController::class, 'default'])->name('disexpenses.default');
     Route::get('disexpenses/create', [DisExpensesController::class, 'create'])->name('disexpenses.create');
@@ -110,6 +114,7 @@ Route::group(['middleware' => 'auth'], function() {
     Route::get('contract/{id}/print_catch', [ContractController::class, 'print_catch'])->name('contract.print_catch');
 
     Route::get('installmentPay', [InstallmentPayController::class, 'default'])->name('installmentPay.default');
+    Route::get('installmentPay/{id}/show', [InstallmentPayController::class, 'show'])->name('installmentPay.show');
     //Route::get('installmentPay/{id_contract}/{kist_dinar}/{month}/store', [InstallmentPayController::class, 'store'])->name('installmentPay.store');
     Route::post('installmentPay/{id_contract}/{modal_id}/{month}/store', [InstallmentPayController::class, 'store'])->name('installmentPay.store');
     Route::get('installmentPay/{id_contract}/{date_contract}/{month}/print_catch', [InstallmentPayController::class, 'print_catch'])->name('installmentPay.print_catch');

@@ -32,12 +32,13 @@
                 <div class="card-body">
 
                     <center>
-                        @if(session()->has('success'))
+                        {{--@if(session()->has('success'))
 
                             <div class="alert alert-success text-center mt-2">{{session()->get('success')}}</div>
 
                         @endif
-
+                        --}}
+                        
                         @if ($message = Session::get('error'))
                         <div class="alert alert-danger alert-block mt-3 mb-0">
                             <button type="button" class="close" data-dismiss="alert">×</button>

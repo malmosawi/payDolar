@@ -77,7 +77,7 @@
                                     <td>{{ $convertDinar_Dolar->date }}</td>
                                     <td>
                                         
-                                        <a href='{{url("convertDinarToDolar/$convertDinar_Dolar->id/edit")}}' class="btn btn-success" data-toggle="tooltip" data-placement="top" data-original-title="تعديل"><i class="si si-pencil text-dark"></i></a>
+                                        <a href='{{url("convertDinarToDolar/$convertDinar_Dolar->id/edit")}}' class="btn btn-info" data-toggle="tooltip" data-placement="top" data-original-title="تعديل"><i class="si si-pencil text-light"></i></a>
                                         <a data-id="{{ $convertDinar_Dolar->id }}" class="btn btn-danger delete_at" data-toggle="tooltip" data-placement="top" data-original-title="حذف"><i class="si si-trash text-light"></i></a>
                                             
                                     </td>

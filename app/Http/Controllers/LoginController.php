@@ -48,12 +48,14 @@ class LoginController extends Controller
         
             if(Auth::attempt($user_data)){
       
-              $setting = DB::table('setting')->where('id', '=', 1)->orderBy('id', 'DESC')->get();
-              Session::put('exchange_rate', $setting[0]->exchange_rate);  
-              Session::put('add_rate', $setting[0]->add_rate); 
-              Session::put('dolar_box', $setting[0]->dolar_box);  
-              Session::put('dinar_box', $setting[0]->dinar_box);  
-              return redirect('setting');
+              $setting = DB::table('setting')->where('id', '=', 1)->orderBy('id', 'DESC')->first();
+              Session::put('exchange_rate',$setting->exchange_rate);
+              Session::put('exchange_rate_benfit',$setting->exchange_rate_benfit);
+              Session::put('benfit_dolar',$setting->benfit_dolar);
+              Session::put('benfit_dinar',$setting->benfit_dinar);
+              Session::put('dolar_box',$setting->dolar_box);  
+              Session::put('dinar_box',$setting->dinar_box);  
+              return redirect('contract/create');
               
             }else{
               return back()->with('error', 'خطأ في تسجيل الدخول.');

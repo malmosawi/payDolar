@@ -25,13 +25,13 @@
 
         <li aria-haspopup="true"><a href="#" class="sub-icon suppliersCatch"><i class="typcn typcn-device-desktop hor-icon"></i> القبض <i class="fa fa-angle-down horizontal-icon"></i></a>
           <ul class="sub-menu">
-            <li aria-haspopup="true"><a href="{{url('suppliersCatch')}}">القبض من الموردين</a></li>
+            <li aria-haspopup="true"><a href="{{url('suppliersCatch/create')}}">القبض من الموردين</a></li>
           </ul>
         </li>
 
         <li aria-haspopup="true"><a href="#" class="sub-icon suppliersExpenses disexpenses"><i class="typcn typcn-device-desktop hor-icon"></i> الصرف <i class="fa fa-angle-down horizontal-icon"></i></a>
           <ul class="sub-menu">
-            <li aria-haspopup="true"><a href="{{url('suppliersExpenses')}}">الصرف للموردين</a></li>
+            <li aria-haspopup="true"><a href="{{url('suppliersExpenses/create')}}">الصرف للموردين</a></li>
             <li aria-haspopup="true"><a href="{{url('disexpenses')}}">صرف المصاريف</a></li>
           </ul>
         </li>
@@ -43,7 +43,7 @@
           </ul>
         </li>
 
-        <li aria-haspopup="true"><a href="{{url('contract')}}" class="contract"><i class="typcn typcn-arrow-move-outline"></i>العقد</a></li>
+        <li aria-haspopup="true"><a href="{{url('contract')}}" class="contract"><i class="typcn typcn-arrow-move-outline"></i>القرض</a></li>
         <li aria-haspopup="true"><a href="{{url('installmentPay')}}" class="installmentPay"><i class="typcn typcn-arrow-move-outline"></i>التسديد اقساط</a></li>
         
         

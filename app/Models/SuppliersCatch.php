@@ -13,7 +13,7 @@ class SuppliersCatch extends Model
     public $timestamps = true;
 
     protected $fillable = [
-        'id_suppliers', 'money', 'exchange_rate', 'date',
+        'id_suppliers', 'money', 'exchange_rate', 'date','note'
     ];
 
     

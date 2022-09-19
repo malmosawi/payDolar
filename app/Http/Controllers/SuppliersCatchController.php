@@ -12,6 +12,7 @@ use App;
 use Auth;
 use PDF;
 use NumberFormatter;
+Use Alert;
 
 class SuppliersCatchController extends Controller
 {
@@ -36,7 +37,7 @@ class SuppliersCatchController extends Controller
             'money' => ['required','regex:/(^([\p{Arabic}a-zA-z0-9.,()-\/ ]+)?$)/u' , 'max:255'],
             'exchange_rate' => ['required', 'regex:/(^([\p{Arabic}a-zA-z0-9.,()-\/ ]+)?$)/u' , 'max:255'],
             'date' => ['required', 'date' , 'max:255'],
-            
+            'note' => ['nullable', 'string' , 'max:1000'],
         ];
 
         $customMessages = [
@@ -73,13 +74,14 @@ class SuppliersCatchController extends Controller
             $SuppliersCatch->save();
 
             $money_setting = DB::table('setting')->where('id', '=', 1 )->sum('dolar_box');
-            $money = DB::table('suppliers_catch')->where([['id_suppliers', '=',  $request->input('name')], ['money', '=',  $m2], ['exchange_rate', '=',  $m3], ['date', '=',  $request->input('date')]])->sum('money');
-            $minus = $money_setting+$money;
+            //$money = DB::table('suppliers_catch')->where([['id_suppliers', '=',  $request->input('name')], ['money', '=',  $m2], ['exchange_rate', '=',  $m3], ['date', '=',  $request->input('date')]])->sum('money');
+            $minus = $money_setting+$SuppliersCatch->money;
 
             $data=array('dolar_box'=>$minus);
             DB::table('setting')->where('id','=', 1)->update($data);
 
-            $request->session()->flash('success', 'تمت الإضافة بنجاح.');
+            toast('تمت الإضافة بنجاح.','success');
+            // $request->session()->flash('success', 'تمت الإضافة بنجاح.');
             return redirect('suppliersCatch');
 
         }
@@ -102,7 +104,7 @@ class SuppliersCatchController extends Controller
             'money' => ['required','regex:/(^([\p{Arabic}a-zA-z0-9.,()-\/ ]+)?$)/u' , 'max:255'],
             'exchange_rate' => ['required', 'regex:/(^([\p{Arabic}a-zA-z0-9.,()-\/ ]+)?$)/u' , 'max:255'],
             'date' => ['required', 'date' , 'max:255'],
-            
+            'note' => ['nullable', 'string' , 'max:1000'],
         ];
 
         $customMessages = [
@@ -139,13 +141,14 @@ class SuppliersCatchController extends Controller
             $SuppliersCatch->save();
 
             $money_setting = DB::table('setting')->where('id', '=', 1 )->sum('dolar_box');
-            $money = DB::table('suppliers_catch')->where([['id_suppliers', '=',  $request->input('name')], ['money', '=',  $m2], ['exchange_rate', '=',  $m3], ['date', '=',  $request->input('date')]])->sum('money');
-            $minus = (($money_setting-$old_money)+$money);
+            //$money = DB::table('suppliers_catch')->where([['id_suppliers', '=',  $request->input('name')], ['money', '=',  $m2], ['exchange_rate', '=',  $m3], ['date', '=',  $request->input('date')]])->sum('money');
+            $minus = (($money_setting-$old_money)+$SuppliersCatch->money);
 
             $data=array('dolar_box'=>$minus);
             DB::table('setting')->where('id','=', 1)->update($data);
 
-            $request->session()->flash('success', 'تم التعديل بنجاح.');
+            toast('تم التعديل بنجاح.','success');
+            // $request->session()->flash('success', 'تم التعديل بنجاح.');
             return redirect('suppliersCatch');
 
         }//else
@@ -207,16 +210,16 @@ class SuppliersCatchController extends Controller
                 $im=asset('/assets/images/refootourism.png');  
 
                 //shape_1
-                $html1 .= '<table style=" align:center; text-align:center; margin:5px; padding:5px; width:100%;" >';
+                $html1 .= '<table style=" align:center; text-align:center; margin:5px; padding:2px; width:100%;" >';
                 $html1 .= '<tr><th colspan="5" style=" border:1px solid black; background-color:white;" ><table style="padding:20px; width:100%;"><tr><td style="text-align:center; font-size:16px; font-family:arialbd;"> وصل قبض <br> Cash Receipt Voucher </td> <td style="text-align:left; width:100%;"></td></tr></table></th></tr>';
                 $html1 .= '<tr><td colspan="5" style=" border:1px solid black; "><table style="padding:5px; width:100%;"><tr><td style="text-align:right; font-size:12px; font-family:arialbd;"> شركة / Company : <label style="font-size:12px; font-family:arial;">شواطى البصرة</label></td> <td style="text-align:center; font-size:12px; font-family:arialbd;"><label style="font-size:12px; font-family:arial;">'.$catch[0]->date.'</label> Date : </td> <td style="text-align:left; font-size:12px; font-family:arialbd;"><label style="color:red; font-size:12px; font-family:arial;">'.$catch[0]->id.'</label> No : </td></tr></table></td></tr>';
                 $html1 .= '<tr style="background-color: #E7E9EB;"><td colspan="5" style=" border:1px solid black; "><table style="padding:5px; width:100%;"><tr><td style="text-align:right; font-size:12px; font-family:arialbd;"> أستلمت من : </td> <td style="text-align:center; font-size:12px; font-family:arial;">'.$suppliers[0]->name.'</td> <td style="text-align:left; font-size:12px; font-family:arialbd;"> Received From : </td></tr></table></td></tr>';
-                $html1 .= '<tr><td colspan="5" style=" border:1px solid black; "><table style="padding:5px; width:100%;"><tr><td style="text-align:right; font-size:12px; font-family:arialbd;"> مبلغاً قدره :  <label style="font-size:12px; font-family:arial;">'.$this->convertNumberToWord_AR($catch[0]->money).' دولار فقط </label></td> <td style="text-align:left; font-size:12px; font-family:arialbd;"><label style="font-size:12px; font-family:arial;">'.$this->convertNumberToWord_EN($catch[0]->money).' USD Only</label> The Sum of : </td></tr></table></td></tr>';
+                $html1 .= '<tr><td colspan="5" style=" border:1px solid black; "><table style="padding:5px; width:100%;"><tr><td style="text-align:right; font-size:12px; font-family:arialbd;"> مبلغاً قدره :  <label style="font-size:10px; font-family:arial;">'.$this->convertNumberToWord_AR($catch[0]->money).' دولار فقط </label></td> <td style="text-align:left; font-size:12px; font-family:arialbd;"><label style="font-size:10px; font-family:arial;">'.$this->convertNumberToWord_EN($catch[0]->money).' USD Only</label> The Sum of : </td></tr></table></td></tr>';
                 $html1 .= '<tr style="background-color:#E7E9EB;"><td colspan="5" style=" border:1px solid black; "><table style="padding:5px; width:100%;"><tr><td style="text-align:right; font-size:12px; font-family:arialbd;"> وذلک عن : </td> <td style="text-align:center; font-size:12px; font-family:arial;"></td> <td style="text-align:left; font-size:12px; font-family:arialbd;"> For : </td></tr></table></td></tr>';
                 $html1 .= '<tr><td colspan="5" style=" border:1px solid black; "><table style="padding:5px; width:100%;"><tr><td style="text-align:right; font-size:12px; font-family:arialbd;"> رقم الهاتف : </td> <td style="text-align:center; font-size:12px; font-family:arial;">'.$suppliers[0]->phone.'</td> <td style="text-align:left; font-size:12px; font-family:arialbd;"> Phone No. : </td></tr></table></td></tr>';
                 $html1 .= '<tr><td style=" border:1px solid black; ">'.preg_replace("/\B(?=(\d{3})+(?!\d))/", ",", $catch[0]->money).'</td><td style=" border:1px solid black;"> USD </td> <td rowspan="2" style="border:1px solid black;"> Accountant </td> <td rowspan="2" style="border:1px solid black;"> Received From </td><td rowspan="2" style="border:1px solid black;">Manager </td></tr>';
                 $html1 .= '<tr><td style=" border:1px solid black; "></td><td style=" border:1px solid black;"> IQD </td> <td colspan="3" style=" border:1px solid black;"></td> </tr>';
-                $html1 .= '<tr><td colspan="5" style="border:1px solid black;"> <br><br><br><br> </td></tr>';
+                $html1 .= '<tr><td colspan="5" style="border:1px solid black;"> <br><br>'.$catch[0]->note.'<br> </td></tr>';
                 
                 $html1 .= '</table>';
 
@@ -234,16 +237,16 @@ class SuppliersCatchController extends Controller
                 //-----------------------------------------------------------------------------------------------------------------------------------------------------  
                 //shape_2
                 $html1='';
-                $html1 .= '<table style=" align:center; text-align:center; margin:5px; padding:5px; width:100%;" >';
+                $html1 .= '<table style=" align:center; text-align:center; margin:5px; padding:2px; width:100%;" >';
                 $html1 .= '<tr><th colspan="5" style=" border:1px solid black; background-color:white;" ><table style="padding:20px; width:100%;"><tr><td style="text-align:center; font-size:16px; font-family:arialbd;"> وصل قبض <br> Cash Receipt Voucher </td> <td style="text-align:left; width:100%;"></td></tr></table></th></tr>';
                 $html1 .= '<tr><td colspan="5" style=" border:1px solid black; "><table style="padding:5px; width:100%;"><tr><td style="text-align:right; font-size:12px; font-family:arialbd;"> شركة / Company : <label style="font-size:12px; font-family:arial;">شواطى البصرة</label></td> <td style="text-align:center; font-size:12px; font-family:arialbd;"><label style="font-size:12px; font-family:arial;">'.$catch[0]->date.'</label> Date : </td> <td style="text-align:left; font-size:12px; font-family:arialbd;"><label style="color:red; font-size:12px; font-family:arial;">'.$catch[0]->id.'</label> No : </td></tr></table></td></tr>';
                 $html1 .= '<tr style="background-color: #E7E9EB;"><td colspan="5" style=" border:1px solid black; "><table style="padding:5px; width:100%;"><tr><td style="text-align:right; font-size:12px; font-family:arialbd;"> أستلمت من : </td> <td style="text-align:center; font-size:12px; font-family:arial;">'.$suppliers[0]->name.'</td> <td style="text-align:left; font-size:12px; font-family:arialbd;"> Received From : </td></tr></table></td></tr>';
-                $html1 .= '<tr><td colspan="5" style=" border:1px solid black; "><table style="padding:5px; width:100%;"><tr><td style="text-align:right; font-size:12px; font-family:arialbd;"> مبلغاً قدره :  <label style="font-size:12px; font-family:arial;">'.$this->convertNumberToWord_AR($catch[0]->money).' دولار فقط </label></td> <td style="text-align:left; font-size:12px; font-family:arialbd;"><label style="font-size:12px; font-family:arial;">'.$this->convertNumberToWord_EN($catch[0]->money).' USD Only</label> The Sum of : </td></tr></table></td></tr>';
+                $html1 .= '<tr><td colspan="5" style=" border:1px solid black; "><table style="padding:5px; width:100%;"><tr><td style="text-align:right; font-size:12px; font-family:arialbd;"> مبلغاً قدره :  <label style="font-size:10px; font-family:arial;">'.$this->convertNumberToWord_AR($catch[0]->money).' دولار فقط </label></td> <td style="text-align:left; font-size:12px; font-family:arialbd;"><label style="font-size:10px; font-family:arial;">'.$this->convertNumberToWord_EN($catch[0]->money).' USD Only</label> The Sum of : </td></tr></table></td></tr>';
                 $html1 .= '<tr style="background-color:#E7E9EB;"><td colspan="5" style=" border:1px solid black; "><table style="padding:5px; width:100%;"><tr><td style="text-align:right; font-size:12px; font-family:arialbd;"> وذلک عن : </td> <td style="text-align:center; font-size:12px; font-family:arial;"></td> <td style="text-align:left; font-size:12px; font-family:arialbd;"> For : </td></tr></table></td></tr>';
                 $html1 .= '<tr><td colspan="5" style=" border:1px solid black; "><table style="padding:5px; width:100%;"><tr><td style="text-align:right; font-size:12px; font-family:arialbd;"> رقم الهاتف : </td> <td style="text-align:center; font-size:12px; font-family:arial;">'.$suppliers[0]->phone.'</td> <td style="text-align:left; font-size:12px; font-family:arialbd;"> Phone No. : </td></tr></table></td></tr>';
                 $html1 .= '<tr><td style=" border:1px solid black; ">'.preg_replace("/\B(?=(\d{3})+(?!\d))/", ",", $catch[0]->money).'</td><td style=" border:1px solid black;"> USD </td> <td rowspan="2" style="border:1px solid black;"> Accountant </td> <td rowspan="2" style="border:1px solid black;"> Received From </td><td rowspan="2" style="border:1px solid black;">Manager </td></tr>';
                 $html1 .= '<tr><td style=" border:1px solid black; "></td><td style=" border:1px solid black;"> IQD </td> <td colspan="3" style=" border:1px solid black;"></td> </tr>';
-                $html1 .= '<tr><td colspan="5" style="border:1px solid black;"> <br><br><br><br> </td></tr>';
+                $html1 .= '<tr><td colspan="5" style="border:1px solid black;"> <br><br>'.$catch[0]->note.'<br> </td></tr>';
                 
                 $html1 .= '</table>';
 

@@ -6,16 +6,13 @@
 		<meta charset="UTF-8">
 		<meta name='viewport' content='width=device-width, initial-scale=1.0, user-scalable=0'>
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<meta content="Hogo– Creative Admin Multipurpose Responsive Bootstrap4 Dashboard HTML Template" name="description">
-		<meta content="Spruko Technologies Private Limited" name="author">
-		<meta name="keywords" content="html admin template, bootstrap admin template premium, premium responsive admin template, admin dashboard template bootstrap, bootstrap simple admin template premium, web admin template, bootstrap admin template, premium admin template html5, best bootstrap admin template, premium admin panel template, admin template"/>
-
+		
 		<!-- Favicon -->
 		<link rel="icon" href="{{asset('assets/images/brand/favicon.ico')}}" type="image/x-icon"/>
 		<link rel="shortcut icon" type="image/x-icon" href="{{asset('assets/images/brand/favicon.ico')}}" />
 
 		<!-- Title -->
-		<title>Hogo – Creative Admin Multipurpose Responsive Bootstrap4 Dashboard HTML Template</title>
+		<title>بيع الدولار</title>
 
 		<!--Bootstrap.min css-->
 		<link rel="stylesheet" href="{{asset('assets/plugins/bootstrap/css/bootstrap.min.css')}}">
@@ -78,8 +75,8 @@
 													<div class="text-center mb-6">
 														<img src="assets/images/brand/logo.png" class="" alt="">
 													</div>
-													<h3>Login</h3>
-													<p class="text-muted">Sign In to your account</p>
+													<!-- <h3>Login</h3> -->
+													<!-- <p class="text-muted">Sign In to your account</p> -->
 
                                                     @if ($message = Session::get('error'))
 
@@ -110,14 +107,12 @@
                                                         </div>
                                                         <div class="row">
                                                             <div class="col-12">
-                                                                <button type="submit" class="btn btn-primary btn-block">{{ __('Log in') }}</button>
+                                                                <button type="submit" class="btn btn-primary btn-block">{{ __('تسجيل الدخول') }}</button>
                                                             </div>
                                                         </div>
                                                         <div class="mt-6 btn-list">
                                                             <button type="button" class="btn btn-icon btn-facebook"><i class="fa fa-facebook"></i></button>
-                                                            <button type="button" class="btn btn-icon btn-google"><i class="fa fa-google"></i></button>
-                                                            <button type="button" class="btn btn-icon btn-twitter"><i class="fa fa-twitter"></i></button>
-                                                            <button type="button" class="btn btn-icon btn-dribbble"><i class="fa fa-dribbble"></i></button>
+                                                            <button type="button" class="btn btn-icon btn-instagram"><i class="fa fa-instagram"></i></button>
                                                         </div>
 
                                                     </form>

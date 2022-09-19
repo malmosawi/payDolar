@@ -15,6 +15,7 @@
         <div class="mr-auto">
             <div class="input-group">
                 <a class="btn btn-primary ml-5 mt-4 mt-sm-0" href="{{ url('suppliers/create') }}"> إضافة <i class="fe fe-plus ml-1 mt-1"></i></a>
+                <a class="btn btn-success ml-5 mt-4 mt-sm-0" href="{{ url('suppliers/showAll') }}"> طباعة كشف لكل الموردين <i class="fe fe-list ml-1 mt-1"></i></a>
             </div>
         </div>
     </div>
@@ -74,9 +75,10 @@
                                     <td>{{ $supplier->phone }}</td>
                                     <td>
                                         
-                                        <a href='{{url("suppliers/$supplier->id/edit")}}' class="btn btn-success" data-toggle="tooltip" data-placement="top" data-original-title="تعديل"><i class="si si-pencil text-dark"></i></a>
+                                        <a href='{{url("suppliers/$supplier->id/edit")}}' class="btn btn-info" data-toggle="tooltip" data-placement="top" data-original-title="تعديل"><i class="si si-pencil text-light"></i></a>
                                         <a data-id="{{ $supplier->id }}" class="btn btn-danger delete_at" data-toggle="tooltip" data-placement="top" data-original-title="حذف"><i class="si si-trash text-light"></i></a>
-                                            
+                                        <a href='{{url("suppliers/$supplier->id/show")}}' class="btn btn-gray" data-toggle="tooltip" data-placement="top" data-original-title="طباعة"><i class="si si-printer text-light"></i></a>
+                                           
                                     </td>
                                 </tr>
                             @endforeach

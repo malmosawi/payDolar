@@ -11,12 +11,19 @@ use App;
 use Auth;
 use PDF;
 use NumberFormatter;
+Use Alert;
 
 class InstallmentPayController extends Controller
 {
     public function default()
     {   
         $contracts = DB::table('contract')->where([['id', '<>', null ] , ['deleted_at' , '=' , null ]])->orderBy('date', 'DESC')->get();
+        return view('installmentPay.default' , ['contracts'=>$contracts]);
+    }
+
+    public function show($id)
+    {   
+        $contracts = DB::table('contract')->where([['id_customers', '=', $id ] , ['deleted_at' , '=' , null ]])->orderBy('date', 'DESC')->get();
         return view('installmentPay.default' , ['contracts'=>$contracts]);
     }
 
@@ -76,7 +83,7 @@ class InstallmentPayController extends Controller
 
         $rules = [
             'name_customer' => ['required', 'regex:/(^([\p{Arabic}a-zA-z0-9 ]+)?$)/u' , 'max:255'],
-            'money' => ['required','regex:/(^([\p{Arabic}a-zA-z0-9.,()-\/ ]+)?$)/u' , 'max:255'],
+            'money_month' => ['required','regex:/(^([\p{Arabic}a-zA-z0-9.,()-\/ ]+)?$)/u' , 'max:255'],
             
             
         ];
@@ -84,8 +91,8 @@ class InstallmentPayController extends Controller
         $customMessages = [
             'name_customer.required' => 'الاسم يجب ان لا يترك فارغاً.',
             'name_customer.regex' => 'الاسم يجب ان يحتوي على احرف وارقام فقط.',
-            'money.required' => 'المبلغ يجب ان لا يترك فارغاً.',
-            'money.regex' => 'المبلغ يجب ان يحتوي على ارقام فقط.',       
+            'money_month.required' => 'المبلغ يجب ان لا يترك فارغاً.',
+            'money_month.regex' => 'المبلغ يجب ان يحتوي على ارقام فقط.',       
         ];
 
             
@@ -95,27 +102,31 @@ class InstallmentPayController extends Controller
           return back()->withErrors($validator->errors())->withInput();
         }else{
 
-            $contract = DB::table('contract')->where([['id', '=', $id_contract ] , ['deleted_at' ,'=' , null ] ])->orderBy('id', 'DESC')->get();
+            $contract = DB::table('contract')->where([['id', '=', $id_contract ] , ['deleted_at' ,'=' , null ] ])->orderBy('id', 'DESC')->first();
                                 
             $installmentPay = new InstallmentPay;
-            $installmentPay->id_contract = $contract[0]->id;
-            $installmentPay->date_contract = $contract[0]->date;
-            $installmentPay->money = str_replace("," , '', $request->input('money'));
-            $installmentPay->exchange_rate = $contract[0]->exchange_rate;
+            $installmentPay->id_contract = $contract->id;
+            $installmentPay->date_contract = $contract->date;
+            $installmentPay->money_month = str_replace("," , '', $request->input('money_month'));
+            $installmentPay->exchange_rate_benfit = $contract->exchange_rate_benfit;
             $installmentPay->months_number = $month;
             $installmentPay->date = date("Y-m-d");
             $installmentPay->user_created = Auth::user()->username;
             $installmentPay->save();
 
             $dinar_box = DB::table('setting')->where('id', '=', 1 )->sum('dinar_box');
-            $plus = $dinar_box+(int)str_replace("," , '', $request->input('money') );
+            $plus = $dinar_box+(int)str_replace("," , '', $request->input('money_month') );
 
             $data=array('dinar_box'=>$plus);
             DB::table('setting')->where('id','=', 1)->update($data);
 
-            $id_contract=$contract[0]->id;
-            $date_contract=$contract[0]->date;
-            return redirect("installmentPay/$id_contract/$date_contract/$month/print_catch");
+            $id_contract=$contract->id;
+            $date_contract=$contract->date;
+            // header("Refresh:0");
+            // return back();
+            toast('تمت الإضافة بنجاح.','success');
+            return redirect()->to("installmentPay/$id_contract/$date_contract/$month/print_catch");
+            // return redirect("installmentPay/$id_contract/$date_contract/$month/print_catch");
 
         }//else
         
@@ -152,8 +163,7 @@ class InstallmentPayController extends Controller
     public function print_catch($id_contract ,$date_contract, $month)
     {   
        
-
-            $installmentPay = DB::table('installment_pay')->where([['id_contract', '=', $id_contract] ,['date_contract', '=', $date_contract] ,['months_number', '=', $month] , ['deleted_at','=', null ]])->orderBy('id', 'DESC')->get();
+            $installmentPay = DB::table('installment_pay')->where([['id_contract', '=', $id_contract] ,['date_contract', '=', $date_contract] ,['months_number', '=', $month] , ['deleted_at','=', null ]])->orderBy('id', 'DESC')->first();
            
             PDF::SetTitle('PDF');
             PDF::AddPage();
@@ -164,20 +174,20 @@ class InstallmentPayController extends Controller
             $html1='';
             if(false !== $installmentPay){
 
-                $contract = DB::table('contract')->where([ ['id', '=', $id_contract] , ['date', '=', $date_contract] ])->orderBy('id', 'DESC')->get();
-                $customers = DB::table('customers')->where([['id', '=', $contract[0]->id_customers ],['deleted_at','=', null ]])->orderBy('id', 'DESC')->get();
+                $contract = DB::table('contract')->where([ ['id', '=', $id_contract] , ['date', '=', $date_contract] ])->orderBy('id', 'DESC')->first();
+                $customers = DB::table('customers')->where([['id', '=', $contract->id_customers ],['deleted_at','=', null ]])->orderBy('id', 'DESC')->first();
                 $im=asset('/assets/images/refootourism.png');  
 
                 //shape_1
-                $html1 .= '<table style=" align:center; text-align:center; margin:5px; padding:5px; width:100%;" >';
+                $html1 .= '<table style=" align:center; text-align:center; margin:5px; padding:2px; width:100%;" >';
                 $html1 .= '<tr><th colspan="5" style=" border:1px solid black; background-color:white;" ><table style="padding:20px; width:100%;"><tr><td style="text-align:center; font-size:16px; font-family:arialbd;"> وصل قبض <br> Cash Receipt Voucher </td> <td style="text-align:left; width:100%;"></td></tr></table></th></tr>';
-                $html1 .= '<tr><td colspan="5" style=" border:1px solid black; "><table style="padding:5px; width:100%;"><tr><td style="text-align:right; font-size:12px; font-family:arialbd;"> شركة / Company : <label style="font-size:12px; font-family:arial;">شواطى البصرة</label></td> <td style="text-align:center; font-size:12px; font-family:arialbd;"><label style="font-size:12px; font-family:arial;">'.$installmentPay[0]->date.'</label> Date : </td> <td style="text-align:left; font-size:12px; font-family:arialbd;"><label style="color:red; font-size:12px; font-family:arial;">'.$installmentPay[0]->id.'</label> No : </td></tr></table></td></tr>';
-                $html1 .= '<tr style="background-color: #E7E9EB;"><td colspan="5" style=" border:1px solid black; "><table style="padding:5px; width:100%;"><tr><td style="text-align:right; font-size:12px; font-family:arialbd;"> أستلمت من : </td> <td style="text-align:center; font-size:12px; font-family:arial;">'.$customers[0]->name.'</td> <td style="text-align:left; font-size:12px; font-family:arialbd;"> Received From : </td></tr></table></td></tr>';
-                $html1 .= '<tr><td colspan="5" style=" border:1px solid black; "><table style="padding:5px; width:100%;"><tr><td style="text-align:right; font-size:12px; font-family:arialbd;"> مبلغاً قدره :  <label style="font-size:12px; font-family:arial;">'.$this->convertNumberToWord_AR($installmentPay[0]->money).' دينار فقط </label></td> <td style="text-align:left; font-size:12px; font-family:arialbd;"><label style="font-size:12px; font-family:arial;">'.$this->convertNumberToWord_EN($installmentPay[0]->money).' IQD Only</label> The Sum of : </td></tr></table></td></tr>';
+                $html1 .= '<tr><td colspan="5" style=" border:1px solid black; "><table style="padding:5px; width:100%;"><tr><td style="text-align:right; font-size:12px; font-family:arialbd;"> شركة / Company : <label style="font-size:12px; font-family:arial;">شواطى البصرة</label></td> <td style="text-align:center; font-size:12px; font-family:arialbd;"><label style="font-size:12px; font-family:arial;">'.$installmentPay->date.'</label> Date : </td> <td style="text-align:left; font-size:12px; font-family:arialbd;"><label style="color:red; font-size:12px; font-family:arial;">'.$installmentPay->id.'</label> No : </td></tr></table></td></tr>';
+                $html1 .= '<tr style="background-color: #E7E9EB;"><td colspan="5" style=" border:1px solid black; "><table style="padding:5px; width:100%;"><tr><td style="text-align:right; font-size:12px; font-family:arialbd;"> أستلمت من : </td> <td style="text-align:center; font-size:12px; font-family:arial;">'.$customers->name.'</td> <td style="text-align:left; font-size:12px; font-family:arialbd;"> Received From : </td></tr></table></td></tr>';
+                $html1 .= '<tr><td colspan="5" style=" border:1px solid black; "><table style="padding:5px; width:100%;"><tr><td style="text-align:right; font-size:12px; font-family:arialbd;"> مبلغاً قدره :  <label style="font-size:10px; font-family:arial;">'.$this->convertNumberToWord_AR($installmentPay->money_month).' دينار فقط </label></td> <td style="text-align:left; font-size:12px; font-family:arialbd;"><label style="font-size:10px; font-family:arial;">'.$this->convertNumberToWord_EN($installmentPay->money_month).' IQD Only</label> The Sum of : </td></tr></table></td></tr>';
                 $html1 .= '<tr style="background-color:#E7E9EB;"><td colspan="5" style=" border:1px solid black; "><table style="padding:5px; width:100%;"><tr><td style="text-align:right; font-size:12px; font-family:arialbd;"> وذلک عن : </td> <td style="text-align:center; font-size:12px; font-family:arial;"></td> <td style="text-align:left; font-size:12px; font-family:arialbd;"> For : </td></tr></table></td></tr>';
-                $html1 .= '<tr><td colspan="5" style=" border:1px solid black; "><table style="padding:5px; width:100%;"><tr><td style="text-align:right; font-size:12px; font-family:arialbd;"> رقم الهاتف : </td> <td style="text-align:center; font-size:12px; font-family:arial;">'.$customers[0]->phone.'</td> <td style="text-align:left; font-size:12px; font-family:arialbd;"> Phone No. : </td></tr></table></td></tr>';
+                $html1 .= '<tr><td colspan="5" style=" border:1px solid black; "><table style="padding:5px; width:100%;"><tr><td style="text-align:right; font-size:12px; font-family:arialbd;"> رقم الهاتف : </td> <td style="text-align:center; font-size:12px; font-family:arial;">'.$customers->phone.'</td> <td style="text-align:left; font-size:12px; font-family:arialbd;"> Phone No. : </td></tr></table></td></tr>';
                 $html1 .= '<tr><td style=" border:1px solid black; "></td><td style=" border:1px solid black;"> USD </td> <td rowspan="2" style="border:1px solid black;"> Accountant </td> <td rowspan="2" style="border:1px solid black;"> Received From </td><td rowspan="2" style="border:1px solid black;">Manager </td></tr>';
-                $html1 .= '<tr><td style=" border:1px solid black; ">'.preg_replace("/\B(?=(\d{3})+(?!\d))/", ",", $installmentPay[0]->money).'</td><td style=" border:1px solid black;"> IQD </td> <td colspan="3" style=" border:1px solid black;"></td> </tr>';
+                $html1 .= '<tr><td style=" border:1px solid black; ">'.preg_replace("/\B(?=(\d{3})+(?!\d))/", ",", $installmentPay->money_month).'</td><td style=" border:1px solid black;"> IQD </td> <td colspan="3" style=" border:1px solid black;"></td> </tr>';
                 $html1 .= '<tr><td colspan="5" style="border:1px solid black;"> <br><br><br><br> </td></tr>';
                 
                 $html1 .= '</table>';
@@ -196,15 +206,15 @@ class InstallmentPayController extends Controller
                 //-----------------------------------------------------------------------------------------------------------------------------------------------------  
                 //shape_2
                 $html1='';
-                $html1 .= '<table style=" align:center; text-align:center; margin:5px; padding:5px; width:100%;" >';
+                $html1 .= '<table style=" align:center; text-align:center; margin:5px; padding:2px; width:100%;" >';
                 $html1 .= '<tr><th colspan="5" style=" border:1px solid black; background-color:white;" ><table style="padding:20px; width:100%;"><tr><td style="text-align:center; font-size:16px; font-family:arialbd;"> وصل قبض <br> Cash Receipt Voucher </td> <td style="text-align:left; width:100%;"></td></tr></table></th></tr>';
-                $html1 .= '<tr><td colspan="5" style=" border:1px solid black; "><table style="padding:5px; width:100%;"><tr><td style="text-align:right; font-size:12px; font-family:arialbd;"> شركة / Company : <label style="font-size:12px; font-family:arial;">شواطى البصرة</label></td> <td style="text-align:center; font-size:12px; font-family:arialbd;"><label style="font-size:12px; font-family:arial;">'.$installmentPay[0]->date.'</label> Date : </td> <td style="text-align:left; font-size:12px; font-family:arialbd;"><label style="color:red; font-size:12px; font-family:arial;">'.$installmentPay[0]->id.'</label> No : </td></tr></table></td></tr>';
-                $html1 .= '<tr style="background-color: #E7E9EB;"><td colspan="5" style=" border:1px solid black; "><table style="padding:5px; width:100%;"><tr><td style="text-align:right; font-size:12px; font-family:arialbd;"> أستلمت من : </td> <td style="text-align:center; font-size:12px; font-family:arial;">'.$customers[0]->name.'</td> <td style="text-align:left; font-size:12px; font-family:arialbd;"> Received From : </td></tr></table></td></tr>';
-                $html1 .= '<tr><td colspan="5" style=" border:1px solid black; "><table style="padding:5px; width:100%;"><tr><td style="text-align:right; font-size:12px; font-family:arialbd;"> مبلغاً قدره :  <label style="font-size:12px; font-family:arial;">'.$this->convertNumberToWord_AR($installmentPay[0]->money).' دينار فقط </label></td> <td style="text-align:left; font-size:12px; font-family:arialbd;"><label style="font-size:12px; font-family:arial;">'.$this->convertNumberToWord_EN($installmentPay[0]->money).' IQD Only</label> The Sum of : </td></tr></table></td></tr>';
+                $html1 .= '<tr><td colspan="5" style=" border:1px solid black; "><table style="padding:5px; width:100%;"><tr><td style="text-align:right; font-size:12px; font-family:arialbd;"> شركة / Company : <label style="font-size:12px; font-family:arial;">شواطى البصرة</label></td> <td style="text-align:center; font-size:12px; font-family:arialbd;"><label style="font-size:12px; font-family:arial;">'.$installmentPay->date.'</label> Date : </td> <td style="text-align:left; font-size:12px; font-family:arialbd;"><label style="color:red; font-size:12px; font-family:arial;">'.$installmentPay->id.'</label> No : </td></tr></table></td></tr>';
+                $html1 .= '<tr style="background-color: #E7E9EB;"><td colspan="5" style=" border:1px solid black; "><table style="padding:5px; width:100%;"><tr><td style="text-align:right; font-size:12px; font-family:arialbd;"> أستلمت من : </td> <td style="text-align:center; font-size:12px; font-family:arial;">'.$customers->name.'</td> <td style="text-align:left; font-size:12px; font-family:arialbd;"> Received From : </td></tr></table></td></tr>';
+                $html1 .= '<tr><td colspan="5" style=" border:1px solid black; "><table style="padding:5px; width:100%;"><tr><td style="text-align:right; font-size:12px; font-family:arialbd;"> مبلغاً قدره :  <label style="font-size:10px; font-family:arial;">'.$this->convertNumberToWord_AR($installmentPay->money_month).' دينار فقط </label></td> <td style="text-align:left; font-size:12px; font-family:arialbd;"><label style="font-size:10px; font-family:arial;">'.$this->convertNumberToWord_EN($installmentPay->money_month).' IQD Only</label> The Sum of : </td></tr></table></td></tr>';
                 $html1 .= '<tr style="background-color:#E7E9EB;"><td colspan="5" style=" border:1px solid black; "><table style="padding:5px; width:100%;"><tr><td style="text-align:right; font-size:12px; font-family:arialbd;"> وذلک عن : </td> <td style="text-align:center; font-size:12px; font-family:arial;"></td> <td style="text-align:left; font-size:12px; font-family:arialbd;"> For : </td></tr></table></td></tr>';
-                $html1 .= '<tr><td colspan="5" style=" border:1px solid black; "><table style="padding:5px; width:100%;"><tr><td style="text-align:right; font-size:12px; font-family:arialbd;"> رقم الهاتف : </td> <td style="text-align:center; font-size:12px; font-family:arial;">'.$customers[0]->phone.'</td> <td style="text-align:left; font-size:12px; font-family:arialbd;"> Phone No. : </td></tr></table></td></tr>';
+                $html1 .= '<tr><td colspan="5" style=" border:1px solid black; "><table style="padding:5px; width:100%;"><tr><td style="text-align:right; font-size:12px; font-family:arialbd;"> رقم الهاتف : </td> <td style="text-align:center; font-size:12px; font-family:arial;">'.$customers->phone.'</td> <td style="text-align:left; font-size:12px; font-family:arialbd;"> Phone No. : </td></tr></table></td></tr>';
                 $html1 .= '<tr><td style=" border:1px solid black; "></td><td style=" border:1px solid black;"> USD </td> <td rowspan="2" style="border:1px solid black;"> Accountant </td> <td rowspan="2" style="border:1px solid black;"> Received From </td><td rowspan="2" style="border:1px solid black;">Manager </td></tr>';
-                $html1 .= '<tr><td style=" border:1px solid black; ">'.preg_replace("/\B(?=(\d{3})+(?!\d))/", ",", $installmentPay[0]->money).'</td><td style=" border:1px solid black;"> IQD </td> <td colspan="3" style=" border:1px solid black;"></td> </tr>';
+                $html1 .= '<tr><td style=" border:1px solid black; ">'.preg_replace("/\B(?=(\d{3})+(?!\d))/", ",", $installmentPay->money_month).'</td><td style=" border:1px solid black;"> IQD </td> <td colspan="3" style=" border:1px solid black;"></td> </tr>';
                 $html1 .= '<tr><td colspan="5" style="border:1px solid black;"> <br><br><br><br> </td></tr>';
                 
                 $html1 .= '</table>';

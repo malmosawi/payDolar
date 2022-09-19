@@ -6,16 +6,20 @@
 		<meta charset="UTF-8">
 		<meta name='viewport' content='width=device-width, initial-scale=1.0, user-scalable=0'>
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<meta content="Hogo– Creative Admin Multipurpose Responsive Bootstrap4 Dashboard HTML Template" name="description">
+		<!-- <meta content="Hogo– Creative Admin Multipurpose Responsive Bootstrap4 Dashboard HTML Template" name="description">
 		<meta content="Spruko Technologies Private Limited" name="author">
-		<meta name="keywords" content="html admin template, bootstrap admin template premium, premium responsive admin template, admin dashboard template bootstrap, bootstrap simple admin template premium, web admin template, bootstrap admin template, premium admin template html5, best bootstrap admin template, premium admin panel template, admin template"/>
-
+		<meta name="keywords" content="html admin template, bootstrap admin template premium, premium responsive admin template, admin dashboard template bootstrap, bootstrap simple admin template premium, web admin template, bootstrap admin template, premium admin template html5, best bootstrap admin template, premium admin panel template, admin template"/> -->
+		<meta http-equiv="Pragma" content="no-cache">
+		<meta http-equiv="no-cache">
+		<meta http-equiv="Expires" content="-1">
+		<meta http-equiv="Cache-Control" content="no-cache">
+		
 		<!-- Favicon -->
 		<link rel="icon" href="{{asset('assets/images/brand/favicon.ico')}}" type="image/x-icon"/>
 		<link rel="shortcut icon" type="image/x-icon" href="{{asset('assets/images/brand/favicon.ico')}}" />
 
 		<!-- Title -->
-		<title>Pay Dolar</title>
+		<title>بيع الدولار</title>
 
 		<!--Bootstrap.min css-->
 		<link rel="stylesheet" href="{{asset('assets/plugins/bootstrap/css/bootstrap.min.css')}}">
@@ -61,6 +65,8 @@
 
 		<link href="{{asset('assets/tail.select-default.css')}}" rel="stylesheet" type="text/css">
 
+		<!-- <script src="{{asset('assets/sweetalerts/sweetalert2.min.js')}}"></script>
+		<script src="{{asset('assets/sweetalerts/custom-sweetalert.js')}}"></script> -->
 		<!---Sweetalert Css-->
 		<!-- <link href="{{asset('assets/plugins/sweet-alert/jquery.sweet-modal.min.css')}}" rel="stylesheet" />
 		<link href="{{asset('assets/plugins/sweet-alert/sweetalert.css')}}" rel="stylesheet" /> -->
@@ -78,6 +84,10 @@
 			.tail-select .select-label .label-inner {
 				text-align:right;
 				
+			}
+
+			.table tbody .mstofy{
+				background-color: #f4f3f9 !important; 
 			}
 		</style>
 		<!-- Dashboard css -->
@@ -276,6 +286,7 @@
 		<script src="{{asset('assets/js/sweet-alert.js')}}"></script> -->
 		<script src="{{asset('assets/sweetalerts/sweetalert2.min.js')}}"></script>
 		<script src="{{asset('assets/sweetalerts/custom-sweetalert.js')}}"></script>
+		@include('sweetalert::alert')
 
 		<!-- Custom js-->
 		<script src="{{asset('assets/js/custom.js')}}"></script>

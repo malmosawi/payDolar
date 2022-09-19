@@ -61,7 +61,7 @@
                                     <th class="wd-5p">العنوان</th>
                                     <th class="wd-5p">رقم الهاتف</th>
                                     <!-- <th class="wd-10p">اسم الام</th> -->
-                                    <th class="wd-30p">الصورة الشخصية</th>
+                                    <!-- <th class="wd-30p">الصورة الشخصية</th> -->
                                     <th class="wd-10p">التحكم</th>
                                 </tr>
                             </thead>
@@ -71,21 +71,21 @@
                             @foreach($customers as $key=>$customer)
                                 <tr>
                                     <td>{{ ++$num }}</td>
-                                    <td>{{ $customer->name }}</td>
+                                    <td><a href='{{url("installmentPay/$customer->id/show")}}'>{{ $customer->name }}</a></td>
                                     <td>{{ $customer->address }}</td>
                                     <td>{{ $customer->phone }}</td>
                                     <!-- <td>{{ $customer->mother_name }}</td> -->
-                                    <td>
+                                    <!-- <td>
                                         @if($customer->person_image =="" || $customer->person_image == null)
                                             <img src='{{asset("assets/images/users/user.png")}}' class="rounded mx-auto d-block" width="100" height="100">
                                         @else
                                             <img src='{{asset("assets/person_image/$customer->person_image")}}' class="rounded mx-auto d-block" width="100" height="100">
                                         @endif
-                                    </td>
+                                    </td> -->
 
                                     <td>
                                         
-                                        <a href='{{url("customers/$customer->id/edit")}}' class="btn btn-success" data-toggle="tooltip" data-placement="top" data-original-title="تعديل"><i class="si si-pencil text-dark"></i></a>
+                                        <a href='{{url("customers/$customer->id/edit")}}' class="btn btn-info" data-toggle="tooltip" data-placement="top" data-original-title="تعديل"><i class="si si-pencil text-light"></i></a>
                                         <a data-id="{{ $customer->id }}" class="btn btn-danger delete_at" data-toggle="tooltip" data-placement="top" data-original-title="حذف"><i class="si si-trash text-light"></i></a>
                                             
                                     </td>

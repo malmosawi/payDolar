@@ -9,6 +9,7 @@ use App\Models\User;
 use DB;
 use App;
 use Auth;
+Use Alert;
 
 class CustomersController extends Controller
 {
@@ -112,7 +113,8 @@ class CustomersController extends Controller
             $customer->user_created = Auth::user()->username;
             $customer->save();
 
-            $request->session()->flash('success', 'تمت الإضافة بنجاح.');
+            toast('تمت الإضافة بنجاح.','success');
+            // $request->session()->flash('success', 'تمت الإضافة بنجاح.');
             return redirect('customers');
         }
 
@@ -234,7 +236,8 @@ class CustomersController extends Controller
             $customer->user_updated = Auth::user()->username;
             $customer->save();
 
-            $request->session()->flash('success', 'تم التعديل بنجاح.');
+            toast('تم التعديل بنجاح.','success');
+            // $request->session()->flash('success', 'تم التعديل بنجاح.');
             return redirect('customers');
         }
         

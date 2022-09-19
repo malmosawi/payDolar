@@ -11,7 +11,7 @@ class Setting extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'exchange_rate', 'add_rate', 'dolar_box', 'dinar_box',
+        'exchange_rate', 'exchange_rate_benfit', 'benfit_dolar', 'benfit_dinar', 'dolar_box', 'dinar_box',
     ];
 
     

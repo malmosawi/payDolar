@@ -9,6 +9,7 @@ use App\Models\User;
 use DB;
 use App;
 use Auth;
+Use Alert;
 use Illuminate\Support\Facades\Session;
 
 class SettingController extends Controller
@@ -23,8 +24,10 @@ class SettingController extends Controller
     public function store(Request $request)
     {
         $rules = [
-            'exchange_rate' => ['required','regex:/(^([\p{Arabic}a-zA-z0-9.,()-\/ ]+)?$)/u'],
-            'add_rate' => ['required', 'regex:/(^([\p{Arabic}a-zA-z0-9.,()-\/ ]+)?$)/u'],
+            'exchange_rate' => ['required','regex:/(^([0-9.,]+)?$)/u' ,'max:255'],
+            'exchange_rate_benfit' => ['required','regex:/(^([0-9.,]+)?$)/u' ,'max:255'],
+            'benfit_dolar' => ['required','regex:/(^([0-9.,]+)?$)/u' ,'max:255'],
+            'benfit_dinar' => ['required','regex:/(^([0-9.,]+)?$)/u' ,'max:255'],
         ];
 
         $customMessages = [
@@ -44,18 +47,32 @@ class SettingController extends Controller
             $m1 = str_replace("," , '', $request->input('dolar_box'));
             $m2 = str_replace("," , '', $request->input('dinar_box'));
             $m3 = str_replace("," , '', $request->input('exchange_rate'));
+            $m4 = str_replace("," , '', $request->input('exchange_rate_benfit'));
+            $m5 = str_replace("," , '', $request->input('benfit_dolar'));
+            $m6 = str_replace("," , '', $request->input('benfit_dinar'));
 
             $setting = Setting::find(1);
             $setting->exchange_rate = $m3;
-            $setting->add_rate = $request->input('add_rate');
+            $setting->exchange_rate_benfit = $m4;
+            $setting->benfit_dolar = $m5;
+            $setting->benfit_dinar = $m6;
             $setting->created_at = Auth::user()->username;
             $setting->updated_at = Auth::user()->username;
             $setting->save();
 
-            Auth::logout();
-            return redirect('login');
+            Session::put('exchange_rate',$setting->exchange_rate);
+            Session::put('exchange_rate_benfit',$setting->exchange_rate_benfit);
+            Session::put('benfit_dolar',$setting->benfit_dolar);
+            Session::put('benfit_dinar',$setting->benfit_dinar);
+            Session::put('dolar_box',$setting->dolar_box);  
+            Session::put('dinar_box',$setting->dinar_box);  
+
+            toast('تم التعديل بنجاح.','success');
+            return redirect('setting');
+            //Auth::logout();
+            //return redirect('login');
             // $request->session()->flash('success', 'تم التحديث بنجاح.');
-            // return redirect('setting');
+            
         }
 
     }

@@ -136,7 +136,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="form-label">تاريخ اصدار الهوية</label>
-                                    <input type="text" class="form-control @error('identification_date') is-invalid state-invalid @enderror flatpickr flatpickr-input active" name="identification_date" id="identification_date" value="{{ old('identification_date') }}" placeholder="اختر التاريخ">
+                                    <input type="text" class="form-control @error('identification_date') is-invalid state-invalid @enderror flatpickr flatpickr-input active" name="identification_date" id="identification_date" value="{{ old('identification_date')!=''? old('identification_date') : Date('Y-m-d') }}" placeholder="اختر التاريخ">
                                 </div>
                             </div>
 

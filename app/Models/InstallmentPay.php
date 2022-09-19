@@ -13,7 +13,7 @@ class InstallmentPay extends Model
     public $timestamps = true;
 
     protected $fillable = [
-        'id_contract', 'date_contract', 'money', 'exchange_rate', 'months_number', 'date'
+        'id_contract', 'date_contract', 'money_month', 'exchange_rate_benfit', 'months_number', 'date'
     ];
 
     

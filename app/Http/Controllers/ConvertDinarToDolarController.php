@@ -9,6 +9,7 @@ use App\Models\User;
 use DB;
 use App;
 use Auth;
+Use Alert;
 
 class ConvertDinarToDolarController extends Controller
 {
@@ -28,14 +29,16 @@ class ConvertDinarToDolarController extends Controller
         $rules = [
             'dolar_box' => ['required','regex:/(^([\p{Arabic}a-zA-z0-9.,()-\/ ]+)?$)/u' , 'max:255'],
             'dinar_box' => ['required','regex:/(^([\p{Arabic}a-zA-z0-9.,()-\/ ]+)?$)/u' , 'max:255'],
-            'money_dolar' => ['required','regex:/(^([\p{Arabic}a-zA-z0-9.,()-\/ ]+)?$)/u' , 'max:255'],
-            'money_dinar' => ['required','regex:/(^([\p{Arabic}a-zA-z0-9.,()-\/ ]+)?$)/u' , 'max:255'],
+            'money_dolar' => ['required','regex:/(^([0-9,]+)?$)/u' , 'max:255'],
+            'money_dinar' => ['required','regex:/(^([0-9,]+)?$)/u' , 'max:255'],
             'exchange_rate' => ['required', 'regex:/(^([\p{Arabic}a-zA-z0-9.,()-\/ ]+)?$)/u' , 'max:255'],
             'date' => ['required', 'date' , 'max:255'],
             
         ];
 
-        $customMessages = [      
+        $customMessages = [  
+            'money_dolar.regex' => 'سعر الصرف يجب ان يحتوي على ارقام فقط.',
+            'money_dinar.regex' => 'سعر الصرف يجب ان يحتوي على ارقام فقط.',     
             'exchange_rate.required' => 'سعر الصرف يجب ان لا يترك فارغاً.',
             'exchange_rate.regex' => 'سعر الصرف يجب ان يحتوي على ارقام فقط.', 
             'date.required' => 'التاريخ يجب ان لا يترك فارغاً.',
@@ -60,6 +63,7 @@ class ConvertDinarToDolarController extends Controller
 
             if((int)$m4 > (int)$m2){
 
+                toast('مبلغ الدينار اكبر من صندوق الدينار','error');
                 return back()->with('error', 'مبلغ الدينار اكبر من صندوق الدينار');
 
             }else{
@@ -82,7 +86,8 @@ class ConvertDinarToDolarController extends Controller
                 $data=array('dolar_box'=>$plus , 'dinar_box'=>$minus);
                 DB::table('setting')->where('id','=', 1)->update($data);
 
-                $request->session()->flash('success', 'تمت الإضافة بنجاح.');
+                toast('تمت الإضافة بنجاح.','success');
+                // $request->session()->flash('success', 'تمت الإضافة بنجاح.');
                 return redirect('convertDinarToDolar');
 
             }
@@ -104,14 +109,16 @@ class ConvertDinarToDolarController extends Controller
         $rules = [
             'dolar_box' => ['required','regex:/(^([\p{Arabic}a-zA-z0-9.,()-\/ ]+)?$)/u' , 'max:255'],
             'dinar_box' => ['required','regex:/(^([\p{Arabic}a-zA-z0-9.,()-\/ ]+)?$)/u' , 'max:255'],
-            'money_dolar' => ['required','regex:/(^([\p{Arabic}a-zA-z0-9.,()-\/ ]+)?$)/u' , 'max:255'],
-            'money_dinar' => ['required','regex:/(^([\p{Arabic}a-zA-z0-9.,()-\/ ]+)?$)/u' , 'max:255'],
+            'money_dolar' => ['required','regex:/(^([0-9,]+)?$)/u' , 'max:255'],
+            'money_dinar' => ['required','regex:/(^([0-9,]+)?$)/u' , 'max:255'],
             'exchange_rate' => ['required', 'regex:/(^([\p{Arabic}a-zA-z0-9.,()-\/ ]+)?$)/u' , 'max:255'],
             'date' => ['required', 'date' , 'max:255'],
             
         ];
 
-        $customMessages = [      
+        $customMessages = [     
+            'money_dolar.regex' => 'سعر الصرف يجب ان يحتوي على ارقام فقط.',
+            'money_dinar.regex' => 'سعر الصرف يجب ان يحتوي على ارقام فقط.',     
             'exchange_rate.required' => 'سعر الصرف يجب ان لا يترك فارغاً.',
             'exchange_rate.regex' => 'سعر الصرف يجب ان يحتوي على ارقام فقط.', 
             'date.required' => 'التاريخ يجب ان لا يترك فارغاً.',
@@ -123,7 +130,10 @@ class ConvertDinarToDolarController extends Controller
         $validator = Validator::make($request->all(), $rules, $customMessages);
         
         if($validator->fails()){
-          return back()->withErrors($validator->errors())->withInput();
+
+            toast('مبلغ الدينار اكبر من صندوق الدينار','error');  
+            return back()->withErrors($validator->errors())->withInput();
+
         }else{
 
             $m1 = str_replace("," , '', $request->input('dolar_box'));
@@ -158,7 +168,8 @@ class ConvertDinarToDolarController extends Controller
                 $data=array('dolar_box'=>$plus , 'dinar_box'=>$minus);
                 DB::table('setting')->where('id','=', 1)->update($data);
 
-                $request->session()->flash('success', 'تم التعديل بنجاح.');
+                toast('تم التعديل بنجاح.','success');
+                // $request->session()->flash('success', 'تم التعديل بنجاح.');
                 return redirect('convertDinarToDolar');
 
             }

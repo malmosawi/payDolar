@@ -54,8 +54,8 @@
                         @endif
                     </center>
 
-                    @foreach($convertDinarToDolars as $key=>$convertDolar_Dinars)
-                    <form action="{{route('convertDinarToDolar.update', ['id' => $convertDolar_Dinars->id , 'old_money_dolar' => $convertDolar_Dinars->money_dolar , 'old_money_dinar' => $convertDolar_Dinars->money_dinar] )}}" autocomplete="on" method="post" enctype="multipart/form-data" >                                
+                    @foreach($convertDolarToDinar as $key=>$convertDolar_Dinar)
+                    <form action="{{route('convertDolarToDinar.update', ['id' => $convertDolar_Dinar->id , 'old_money_dolar' => $convertDolar_Dinar->money_dolar , 'old_money_dinar' => $convertDolar_Dinar->money_dinar] )}}" autocomplete="on" method="post" enctype="multipart/form-data" >                                
                     @csrf
 
                         <div class="row">
@@ -82,28 +82,28 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="form-label">المبلغ (بالدولار)</label>
-                                    <input type="text" class="form-control @error('money_dolar') is-invalid state-invalid @enderror" name="money_dolar" id="money_dolar" value="{{ old('money_dolar')!=''? old('money_dolar') : $convertDolar_Dinars->money_dolar }}" placeholder="">
+                                    <input type="text" class="form-control @error('money_dolar') is-invalid state-invalid @enderror" name="money_dolar" id="money_dolar" value="{{ old('money_dolar')!=''? old('money_dolar') : $convertDolar_Dinar->money_dolar }}" placeholder="">
                                 </div>
                             </div>
 
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="form-label">سعر الصرف (بالدينار)</label>
-                                    <input type="text" class="form-control @error('exchange_rate') is-invalid state-invalid @enderror" name="exchange_rate" id="exchange_rate" value="{{ old('exchange_rate')!=''? old('exchange_rate') : $convertDolar_Dinars->exchange_rate }}" placeholder="">
+                                    <input type="text" class="form-control @error('exchange_rate') is-invalid state-invalid @enderror" name="exchange_rate" id="exchange_rate" value="{{ old('exchange_rate')!=''? old('exchange_rate') : $convertDolar_Dinar->exchange_rate }}" placeholder="">
                                 </div>
                             </div>
 
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="form-label">المبلغ (بالدينار)</label>
-                                    <input type="text" class="form-control @error('money_dinar') is-invalid state-invalid @enderror" name="money_dinar" id="money_dinar" value="{{ old('money_dinar')!=''? old('money_dinar') : $convertDolar_Dinars->money_dinar }}" placeholder="">
+                                    <input type="text" class="form-control @error('money_dinar') is-invalid state-invalid @enderror" name="money_dinar" id="money_dinar" value="{{ old('money_dinar')!=''? old('money_dinar') : $convertDolar_Dinar->money_dinar }}" placeholder="">
                                 </div>
                             </div>
 
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="form-label">تاريخ</label>
-                                    <input type="text" class="form-control @error('date') is-invalid state-invalid @enderror flatpickr flatpickr-input active" name="date" id="date" value="{{ old('date')!=''? old('date') : $convertDolar_Dinars->date }}" placeholder="اختر التاريخ">
+                                    <input type="text" class="form-control @error('date') is-invalid state-invalid @enderror flatpickr flatpickr-input active" name="date" id="date" value="{{ old('date')!=''? old('date') : $convertDolar_Dinar->date }}" placeholder="اختر التاريخ">
                                 </div>
                             </div>
                             

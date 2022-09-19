@@ -70,8 +70,22 @@
 
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label class="form-label">نسبة الاضافة (%)</label>
-                                    <input type="text" class="form-control @error('add_rate') is-invalid state-invalid @enderror" name="add_rate" id="add_rate" value="{{ old('add_rate')!=''? old('add_rate') : $setting->add_rate }}" placeholder="">
+                                    <label class="form-label">الفائدة (بالدولار)</label>
+                                    <input type="text" class="form-control @error('benfit_dolar') is-invalid state-invalid @enderror" name="benfit_dolar" id="benfit_dolar" value="{{ old('benfit_dolar')!=''? old('benfit_dolar') : $setting->benfit_dolar }}" placeholder="">
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label">الفائدة (بالدينار)</label>
+                                    <input type="text" class="form-control @error('benfit_dinar') is-invalid state-invalid @enderror" name="benfit_dinar" id="benfit_dinar" value="{{ old('benfit_dinar')!=''? old('benfit_dinar') : $setting->benfit_dinar }}" placeholder="">
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label">سعر الصرف مع الفائدة (بالدينار)</label>
+                                    <input type="text" class="form-control @error('exchange_rate_benfit') is-invalid state-invalid @enderror" name="exchange_rate_benfit" id="exchange_rate_benfit" value="{{ old('exchange_rate_benfit')!=''? old('exchange_rate_benfit') : $setting->exchange_rate_benfit }}" placeholder="">
                                 </div>
                             </div>
 
@@ -125,11 +139,25 @@
     $(document).ready(function() {
     
         $("#exchange_rate").val(numberWithCommas($("#exchange_rate").val() ));
+        $("#exchange_rate_benfit").val(numberWithCommas($("#exchange_rate_benfit").val() ));
+        $("#benfit_dolar").val(numberWithCommas($("#benfit_dolar").val() ));
+        $("#benfit_dinar").val(numberWithCommas($("#benfit_dinar").val() ));
         $("#dolar_box").val(numberWithCommas($("#dolar_box").val() ));
         $("#dinar_box").val(numberWithCommas($("#dinar_box").val() ));
         
-        $('#exchange_rate').on("change" , function(){
+        $('#exchange_rate,#benfit_dolar').on("change" , function(){
             $("#exchange_rate").val(numberWithCommas($("#exchange_rate").val() ));
+            $("#benfit_dolar").val(numberWithCommas($("#benfit_dolar").val() ));
+
+            var benfit_dolar = parseInt($('#benfit_dolar').val().replaceAll(",", ""));
+            var exchange_rate = parseInt($('#exchange_rate').val().replaceAll(",", ""));
+            $("#benfit_dinar").val(numberWithCommas( (exchange_rate*benfit_dolar)/100 ));
+            var benfit_dinar = parseInt($('#benfit_dinar').val().replaceAll(",", ""));
+            $("#exchange_rate_benfit").val(numberWithCommas((exchange_rate+benfit_dinar)));
+        });
+
+        $('#exchange_rate_benfit').on("change" , function(){
+            $("#exchange_rate_benfit").val(numberWithCommas($("#exchange_rate_benfit").val() ));
         });
 
     });

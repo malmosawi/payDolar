@@ -9,6 +9,7 @@ use App\Models\User;
 use DB;
 use App;
 use Auth;
+Use Alert;
 
 class DisExpensesController extends Controller
 {
@@ -76,11 +77,12 @@ class DisExpensesController extends Controller
                 $data=array('dinar_box'=>$minus);
                 DB::table('setting')->where('id','=', 1)->update($data);
             
-
+                toast('تمت الإضافة بنجاح.','success');
                 $request->session()->flash('success', 'تمت الإضافة بنجاح.');
                 return redirect('disexpenses');
 
             }else{
+                toast('المبلغ المصروف اكبر من صندوق الدينار','error');
                 return back()->with('error', 'المبلغ المصروف اكبر من صندوق الدينار');
             }
             
@@ -147,11 +149,12 @@ class DisExpensesController extends Controller
                 $data=array('dinar_box'=>$minus);
                 DB::table('setting')->where('id','=', 1)->update($data);
             
-
-                $request->session()->flash('success', 'تم تعديل بنجاح.');
+                toast('تم التعديل بنجاح.','success');
+                // $request->session()->flash('success', 'تم تعديل بنجاح.');
                 return redirect('disexpenses');
 
             }else{
+                toast('المبلغ المصروف اكبر من صندوق الدينار','error');
                 return back()->with('error', 'المبلغ المصروف اكبر من صندوق الدينار');
             }
 

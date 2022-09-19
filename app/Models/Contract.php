@@ -14,7 +14,7 @@ class Contract extends Model
     public $timestamps = true;
 
     protected $fillable = [
-        'id_customers', 'money', 'exchange_rate', 'add_rate','money_month', 'months_number','date','finish'
+        'id_customers', 'money_dolar', 'money_dinar', 'months_number', 'money_month', 'exchange_rate', 'exchange_rate_benfit', 'benfit_dolar', 'benfit_dinar', 'date', 'finish', 'note'
     ];
 
     

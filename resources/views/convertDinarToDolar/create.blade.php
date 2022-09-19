@@ -103,7 +103,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="form-label">تاريخ</label>
-                                    <input type="text" class="form-control @error('date') is-invalid state-invalid @enderror flatpickr flatpickr-input active" name="date" id="date" value="{{ old('date') }}" placeholder="اختر التاريخ">
+                                    <input type="text" class="form-control @error('date') is-invalid state-invalid @enderror flatpickr flatpickr-input active" name="date" id="date" value="{{ old('date')!=''? old('date') : date('Y-m-d') }}" placeholder="اختر التاريخ">
                                 </div>
                             </div>
                             
