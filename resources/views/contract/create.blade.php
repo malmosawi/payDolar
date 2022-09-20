@@ -351,16 +351,20 @@
             var months_number = parseInt($('#months_number').val().replaceAll(",", ""));
             localStorage.setItem("months_number", months_number );
             
-            $("#money_month").val(numberWithCommas((money_dinar+benfitAll_dinar)/months_number));
-            $(".months_dolar").text(months_number);
+            
             /* $(".months_dinar").text(months_number); */
 
-            $(".kist_dolar").text(numberWithCommas(money_dolar/months_number)+" $");
-            $(".kist_dinar").text(numberWithCommas(money_dinar/months_number)+" IQD");
+            if($("#months_number").val()!=''){
 
-            $(".kist_dolar_benfit").text(numberWithCommas((money_dolar+benfitAll_dolar)/months_number)+" $");
-            $(".kist_dinar_benfit").text(numberWithCommas((money_dinar+benfitAll_dinar)/months_number)+" IQD");
+                $("#money_month").val(numberWithCommas((money_dinar+benfitAll_dinar)/months_number));
+                $(".months_dolar").text(months_number);
 
+                $(".kist_dolar").text(numberWithCommas(money_dolar/months_number)+" $");
+                $(".kist_dinar").text(numberWithCommas(money_dinar/months_number)+" IQD");
+
+                $(".kist_dolar_benfit").text(numberWithCommas((money_dolar+benfitAll_dolar)/months_number)+" $");
+                $(".kist_dinar_benfit").text(numberWithCommas((money_dinar+benfitAll_dinar)/months_number)+" IQD");
+            }//is_finite
             
         });
 

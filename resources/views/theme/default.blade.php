@@ -70,8 +70,67 @@
 		<!---Sweetalert Css-->
 		<!-- <link href="{{asset('assets/plugins/sweet-alert/jquery.sweet-modal.min.css')}}" rel="stylesheet" />
 		<link href="{{asset('assets/plugins/sweet-alert/sweetalert.css')}}" rel="stylesheet" /> -->
+<!-- Font -->
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200&family=Tajawal:wght@300&display=swap"
+        rel="stylesheet">
 
-		<style>
+    <style>
+        .arial {
+            font-family: Arial !important;
+        }
+
+        .tajawal {
+            /* font-family: 'Cairo', sans-serif; */
+            font-family: 'Tajawal', sans-serif !important;
+			font-size: 16px !important;
+        }
+
+        .loader {
+            border: 16px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 16px solid #33E2B3;
+            width: 50px;
+            height: 50px;
+            -webkit-animation: spin 2s linear infinite;
+            /* Safari */
+            animation: spin 2s linear infinite;
+            margin-left: 39%;
+            margin-bottom: 15%;
+        }
+
+        @-webkit-keyframes spin {
+            0% {
+                -webkit-transform: rotate(0deg);
+            }
+
+            100% {
+                -webkit-transform: rotate(360deg);
+            }
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .filterDiv {
+
+            display: none;
+            /* Hidden by default */
+        }
+
+        /* The "show" class is added to the filtered elements */
+        .show {
+            display: block;
+        }
+    
 			.tail-select .select-dropdown ul li.dropdown-option {
             text-align:right;
 			}
@@ -98,7 +157,7 @@
 		
 	</head>
 
-	<body class="app sidebar-mini rtl">
+	<body class="app sidebar-mini rtl tajawal">
 
 		<!--Global-Loader-->
 		<div id="global-loader">
