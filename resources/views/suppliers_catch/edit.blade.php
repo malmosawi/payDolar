@@ -14,25 +14,19 @@
 
 <div class="side-app container">
 
-    <!-- page-header -->
-    <div class="page-header">
-        <!-- <div class="mr-auto">
-            <div class="input-group">
-                <a class="btn btn-primary ml-5 mt-4 mt-sm-0" href="{{ url('customers/create') }}"> إضافة زبون جديد <i class="fe fe-plus ml-1 mt-1"></i></a>
-            </div>
-        </div> -->
-    </div>
-    <!-- End page-header -->
-
 
     <!-- row -->
     <div class="row">
         <div class="col-md-12">
         
             <div class="card">
-                <!-- <div class="card-header">
-                    <h3 class="mb-0 card-title">دفتر حساب قبض مبلغ من المورد</h3>
-                </div> -->
+                <div class="card-header">
+                    <div class="mr-auto">
+                        <div class="input-group">
+                            <a class="btn btn-primary ml-5 mt-4 mt-sm-0" href="{{ url('suppliersCatch') }}"> عرض وصولات القبض <i class="fe fe-list ml-1 mt-1"></i></a>
+                        </div>
+                    </div>
+                </div> 
                 <div class="card-body">
 
                     <center>
@@ -87,19 +81,6 @@
                                 $money_to = DB::table('suppliers_expenses')->where([['id_suppliers', '=', $supplierCatch->id_suppliers ] , ['deleted_at' , '=' , null ]])->sum('money');
                                 $money_rest = (int)$money_from-(int)$money_to;
                             ?>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label class="form-label">المبلغ المستلم من المورد(بالدولار)</label>
-                                    <input type="text" readonly class="form-control @error('money_from') is-invalid state-invalid @enderror" name="money_from" id="money_from" value="{{ $money_from }}" placeholder="">
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label class="form-label">المبلغ المسلم الى المورد(بالدولار)</label>
-                                    <input type="text" readonly class="form-control @error('money_to') is-invalid state-invalid @enderror" name="money_to" id="money_to" value="{{ $money_to }}" placeholder="">
-                                </div>
-                            </div>
 
                             <div class="col-md-6">
                                 <div class="form-group">
@@ -108,14 +89,17 @@
                                 </div>
                             </div>
 
-                            <?php
-                                $money_setting = DB::table('setting')->where('id', '=', 1 )->sum('dolar_box');
-                            ?>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                <label class="form-label">سعر الصرف لكل 100 دولار</label>
+                                    <input type="text" class="form-control @error('exchange_rate') is-invalid state-invalid @enderror" name="exchange_rate" id="exchange_rate" value="{{ old('exchange_rate')!=''? old('exchange_rate') : $supplierCatch->exchange_rate }}" placeholder="">
+                                </div>
+                            </div>
 
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label class="form-label">صندوق الدولار</label>
-                                    <input type="text" readonly class="form-control @error('dolar_box') is-invalid state-invalid @enderror" name="dolar_box" id="dolar_box" value="{{ $money_setting }}" placeholder="">
+                                    <label class="form-label">المبلغ المستلم من المورد(بالدولار)</label>
+                                    <input type="text" readonly class="form-control @error('money_from') is-invalid state-invalid @enderror" name="money_from" id="money_from" value="{{ $money_from }}" placeholder="">
                                 </div>
                             </div>
 
@@ -126,10 +110,11 @@
                                 </div>
                             </div>
 
+
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label class="form-label">سعر الصرف</label>
-                                    <input type="text" class="form-control @error('exchange_rate') is-invalid state-invalid @enderror" name="exchange_rate" id="exchange_rate" value="{{ old('exchange_rate')!=''? old('exchange_rate') : $supplierCatch->exchange_rate }}" placeholder="">
+                                    <label class="form-label">المبلغ المسلم الى المورد(بالدولار)</label>
+                                    <input type="text" readonly class="form-control @error('money_to') is-invalid state-invalid @enderror" name="money_to" id="money_to" value="{{ $money_to }}" placeholder="">
                                 </div>
                             </div>
 
@@ -137,6 +122,17 @@
                                 <div class="form-group">
                                     <label class="form-label">تاريخ</label>
                                     <input type="text" class="form-control @error('date') is-invalid state-invalid @enderror flatpickr flatpickr-input active" name="date" id="date" value="{{ old('date')!=''? old('date') : $supplierCatch->date }}" placeholder="اختر التاريخ">
+                                </div>
+                            </div>
+                            
+                            <?php
+                                $money_setting = DB::table('setting')->where('id', '=', 1 )->sum('dolar_box');
+                            ?>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label">صندوق الدولار</label>
+                                    <input type="text" readonly class="form-control @error('dolar_box') is-invalid state-invalid @enderror" name="dolar_box" id="dolar_box" value="{{ $money_setting }}" placeholder="">
                                 </div>
                             </div>
 

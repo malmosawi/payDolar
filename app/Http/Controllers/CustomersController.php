@@ -41,7 +41,7 @@ class CustomersController extends Controller
             'job_place' => ['nullable', 'regex:/(^([\p{Arabic}a-zA-z0-9 ]+)?$)/u' , 'max:255'],
             'bank_name' => ['nullable', 'regex:/(^([\p{Arabic}a-zA-z0-9 ]+)?$)/u' , 'max:255'],
             'card_password' => ['nullable', 'regex:/(^([\p{Arabic}a-zA-z0-9 ]+)?$)/u' , 'unique:customers' , 'max:255'],
-            'phone_council' => ['nullable', 'regex:/(^([0-9]+)?$)/u' , 'max:255'],
+            'phone_council' => ['nullable', 'regex:/(^([0-9]+)?$)/u', 'min:11' , 'max:11'],
         ];
 
         $customMessages = [
@@ -159,7 +159,7 @@ class CustomersController extends Controller
             'job_place' => ['nullable', 'regex:/(^([\p{Arabic}a-zA-z0-9 ]+)?$)/u' , 'max:255'],
             'bank_name' => ['nullable', 'regex:/(^([\p{Arabic}a-zA-z0-9 ]+)?$)/u' , 'max:255'],
             'card_password' => ['nullable', 'regex:/(^([\p{Arabic}a-zA-z0-9 ]+)?$)/u'  , 'max:255'],
-            'phone_council' => ['nullable', 'regex:/(^([0-9]+)?$)/u' , 'max:255'],
+            'phone_council' => ['nullable', 'regex:/(^([0-9]+)?$)/u' , 'min:11' , 'max:11'],
         ];
 
         $customMessages = [

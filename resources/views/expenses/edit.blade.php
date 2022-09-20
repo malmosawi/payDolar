@@ -11,13 +11,7 @@
 <div class="side-app container">
 
     <!-- page-header -->
-    <div class="page-header">
-        <!-- <div class="mr-auto">
-            <div class="input-group">
-                <a class="btn btn-primary ml-5 mt-4 mt-sm-0" href="{{ url('expenses/create') }}"> إضافة زبون جديد <i class="fe fe-plus ml-1 mt-1"></i></a>
-            </div>
-        </div> -->
-    </div>
+    
     <!-- End page-header -->
 
 
@@ -26,9 +20,13 @@
         <div class="col-md-12">
         
             <div class="card">
-                <!-- <div class="card-header">
-                    <h3 class="mb-0 card-title">تعديل معلومات المورد</h3>
-                </div> -->
+                <div class="card-header">
+                    <div class="mr-auto">
+                        <div class="input-group">
+                            <a class="btn btn-primary ml-5 mt-4 mt-sm-0" href="{{ url('expenses/') }}"> عرض سند الصرف <i class="fe fe-plus ml-1 mt-1"></i></a>
+                        </div>
+                    </div>
+                </div>
                 <div class="card-body">
 
                     <center>

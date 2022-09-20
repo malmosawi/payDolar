@@ -114,7 +114,7 @@ class expensesController extends Controller
     }
 
 
-    public function show($id)
+    public function show(Request $request , $id)
     {   
         PDF::SetTitle('PDF');
         PDF::AddPage();
@@ -122,7 +122,7 @@ class expensesController extends Controller
         PDF::setPageFormat('A4','P');
         PDF::SetFont('arial','',11);
 
-        $dis_expenses = DB::table('dis_expenses')->where([['id_expenses', '=', $id ],['deleted_at','=', null ]])->orderBy('date', 'DESC')->get();
+        $dis_expenses = DB::table('dis_expenses')->where([['id_expenses', '=', $id ],['deleted_at','=', null ]])->whereBetween('date',[$request->input('date_from'),$request->input('date_to')])->orderBy('date', 'DESC')->get();
 
         $html1='';
         if(false !== $dis_expenses){
@@ -177,7 +177,7 @@ class expensesController extends Controller
     }
 
 
-    public function showAll()
+    public function showAll(Request $request)
     {   
         PDF::SetTitle('PDF');
         PDF::AddPage();
@@ -185,7 +185,7 @@ class expensesController extends Controller
         PDF::setPageFormat('A4','P');
         PDF::SetFont('arial','',11);
 
-        $dis_expenses = DB::table('dis_expenses')->where([['id_expenses', '<>', null ],['deleted_at','=', null ]])->orderBy('date', 'DESC')->get();
+        $dis_expenses = DB::table('dis_expenses')->where([['id_expenses', '<>', null ],['deleted_at','=', null ]])->whereBetween('date',[$request->input('date_from2'),$request->input('date_to2')])->orderBy('date', 'DESC')->get();
 
         $html1='';
         if(false !== $dis_expenses){

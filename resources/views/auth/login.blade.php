@@ -73,7 +73,7 @@
                                                 <center>
 
 													<div class="text-center mb-6">
-														<img src="assets/images/brand/logo.png" class="" alt="">
+														<img src="{{asset('assets/images/brand/refootourism.png')}}" class="" alt="">
 													</div>
 													<!-- <h3>Login</h3> -->
 													<!-- <p class="text-muted">Sign In to your account</p> -->
@@ -99,21 +99,21 @@
                                                     
                                                         <div class="input-group mb-3">
                                                             <span class="input-group-addon bg-white"><i class="fa fa-user"></i></span>
-                                                            <input  id="username" type="text" class="form-control" placeholder="Username" name="username" :value="old('username')" required autofocus >
+                                                            <input  id="username" type="text" class="form-control" placeholder="أسم المستخدم" name="username" :value="old('username')" required autofocus >
                                                         </div>
                                                         <div class="input-group mb-4">
                                                             <span class="input-group-addon bg-white"><i class="fa fa-unlock-alt"></i></span>
-                                                            <input id="password" class="form-control" placeholder="Password" type="password" name="password" required autocomplete="current-password">
+                                                            <input id="password" class="form-control" placeholder="الباسورد" type="password" name="password" required autocomplete="current-password">
                                                         </div>
                                                         <div class="row">
                                                             <div class="col-12">
                                                                 <button type="submit" class="btn btn-primary btn-block">{{ __('تسجيل الدخول') }}</button>
                                                             </div>
                                                         </div>
-                                                        <div class="mt-6 btn-list">
+                                                        <!-- <div class="mt-6 btn-list">
                                                             <button type="button" class="btn btn-icon btn-facebook"><i class="fa fa-facebook"></i></button>
                                                             <button type="button" class="btn btn-icon btn-instagram"><i class="fa fa-instagram"></i></button>
-                                                        </div>
+                                                        </div> -->
 
                                                     </form>
                                                 </center>

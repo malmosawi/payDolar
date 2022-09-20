@@ -90,7 +90,9 @@ class SuppliersExpensesController extends Controller
 
                 toast('تمت الإضافة بنجاح.','success');
                 // $request->session()->flash('success', 'تمت الإضافة بنجاح.');
-                return redirect('suppliersExpenses');
+                // return redirect('suppliersExpenses');
+                return redirect("suppliersExpenses/$suppliersExpenses->id/print_catch");
+
 
             }else{
                 toast('المبلغ المسدد للمورد اكبر من المبلغ المستلم من المورد.','error');
@@ -169,8 +171,9 @@ class SuppliersExpensesController extends Controller
                 DB::table('setting')->where('id','=', 1)->update($data);
 
                 toast('تم التعديل بنجاح.','success');
+                return redirect("suppliersExpenses/$suppliersExpenses->id/print_catch");
                 // $request->session()->flash('success', 'تم التعديل بنجاح.');
-                return redirect('suppliersExpenses');
+                // return redirect('suppliersExpenses');
 
             }else{
                 toast('المبلغ المسدد للمورد اكبر من المبلغ المستلم من المورد.','error');

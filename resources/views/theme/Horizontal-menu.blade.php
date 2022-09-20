@@ -17,33 +17,37 @@
         
         <li aria-haspopup="true"><a href="#" class="sub-icon customers suppliers expenses"><i class="typcn typcn-device-desktop hor-icon"></i> العملاء <i class="fa fa-angle-down horizontal-icon"></i></a>
           <ul class="sub-menu">
-            <li aria-haspopup="true"><a href="{{url('customers')}}">الزبائن</a></li>
-            <li aria-haspopup="true"><a href="{{url('suppliers')}}">الموردين</a></li>
-            <li aria-haspopup="true"><a href="{{url('expenses')}}">المصاريف</a></li>
+            <li aria-haspopup="true"><a href="{{url('customers/create')}}">الزبائن</a></li>
+            <li aria-haspopup="true"><a href="{{url('suppliers/create')}}">الموردين</a></li>
+            
           </ul>
         </li>
 
-        <li aria-haspopup="true"><a href="#" class="sub-icon suppliersCatch"><i class="typcn typcn-device-desktop hor-icon"></i> القبض <i class="fa fa-angle-down horizontal-icon"></i></a>
+        <li aria-haspopup="true"><a href="{{url('suppliersCatch/create')}}" class="suppliersCatch"><i class="typcn typcn-arrow-move-outline"></i>القبض من الموردين</a></li>
+        
+
+        <!-- <li aria-haspopup="true"><a href="#" class="sub-icon suppliersCatch"><i class="typcn typcn-device-desktop hor-icon"></i> القبض <i class="fa fa-angle-down horizontal-icon"></i></a>
           <ul class="sub-menu">
             <li aria-haspopup="true"><a href="{{url('suppliersCatch/create')}}">القبض من الموردين</a></li>
           </ul>
-        </li>
+        </li> -->
 
         <li aria-haspopup="true"><a href="#" class="sub-icon suppliersExpenses disexpenses"><i class="typcn typcn-device-desktop hor-icon"></i> الصرف <i class="fa fa-angle-down horizontal-icon"></i></a>
           <ul class="sub-menu">
             <li aria-haspopup="true"><a href="{{url('suppliersExpenses/create')}}">الصرف للموردين</a></li>
-            <li aria-haspopup="true"><a href="{{url('disexpenses')}}">صرف المصاريف</a></li>
+            <li aria-haspopup="true"><a href="{{url('expenses')}}">كل المصارف</a></li>
+            <li aria-haspopup="true"><a href="{{url('disexpenses/create')}}">سند الصرف</a></li>
           </ul>
         </li>
 
         <li aria-haspopup="true"><a href="#" class="sub-icon convertDolarToDinar convertDinarToDolar"><i class="typcn typcn-device-desktop hor-icon"></i> التحويل <i class="fa fa-angle-down horizontal-icon"></i></a>
           <ul class="sub-menu">
-            <li aria-haspopup="true"><a href="{{url('convertDolarToDinar')}}">تحويل الدولار الى دينار</a></li>
-            <li aria-haspopup="true"><a href="{{url('convertDinarToDolar')}}">تحويل الدينار الى دولار</a></li>
+            <li aria-haspopup="true"><a href="{{url('convertDolarToDinar/create')}}">تحويل الدولار الى دينار</a></li>
+            <li aria-haspopup="true"><a href="{{url('convertDinarToDolar/create')}}">تحويل الدينار الى دولار</a></li>
           </ul>
         </li>
 
-        <li aria-haspopup="true"><a href="{{url('contract')}}" class="contract"><i class="typcn typcn-arrow-move-outline"></i>القرض</a></li>
+        <li aria-haspopup="true"><a href="{{url('contract/create')}}" class="contract"><i class="typcn typcn-arrow-move-outline"></i>القرض</a></li>
         <li aria-haspopup="true"><a href="{{url('installmentPay')}}" class="installmentPay"><i class="typcn typcn-arrow-move-outline"></i>التسديد اقساط</a></li>
         
         

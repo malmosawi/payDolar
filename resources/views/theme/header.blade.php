@@ -2,9 +2,9 @@
 <div class="app-header header hor-topheader d-flex">
 	<div class="container">
 		<div class="d-flex">
-			<a class="header-brand" href="index.html">
-				<img src="{{asset('assets/images/brand/logo.png')}}" class="header-brand-img main-logo" alt="Hogo logo">
-				<img src="{{asset('assets/images/brand/icon.png')}}" class="header-brand-img icon-logo" alt="Hogo logo">
+			<a class="header-brand" href="{{url('contract/create')}}">
+				<img src="{{asset('assets/images/brand/refootourism.png')}}" class="header-brand-img main-logo" alt="Hogo logo">
+				<img src="{{asset('assets/images/brand/refootourism.png')}}" class="header-brand-img icon-logo" alt="Hogo logo">
 			</a><!-- logo-->
 			<!-- <a id="horizontal-navtoggle" class="animated-arrow hor-toggle"><span></span></a> -->
 			<!-- <a href="#" data-toggle="search" class="nav-link nav-link  navsearch"><i class="fa fa-search"></i></a>search icon -->

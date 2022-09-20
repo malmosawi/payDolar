@@ -2,7 +2,14 @@
 
 @section('style')
 <style>
+.table td {
+    padding: 5px !important;
+    vertical-align: middle !important;
+}
 
+.table td .btn{
+    margin-top: 5px !important;
+}
 </style>
 @endsection
 
@@ -56,13 +63,13 @@
                         <table id="example" class="table table-striped table-bordered text-center">
                             <thead class="bg-primary font-weight-bold">
                                 <tr>
-                                    <th class="wd-20p">اسم الزبون</th>
-                                    <th class="wd-20p">المبلغ مع الفائدة (دينار)</th>
+                                    <th class="wd-40p" style="width:150px;">اسم الزبون</th>
+                                    <th class="wd-5p">المبلغ مع الفائدة (دينار)</th>
                                     <!-- <th class="wd-20p">سعر الصرف (بالدينار)</th> -->
                                     <!-- <th class="wd-20p">القسط الشهري (دولار)</th> -->
-                                    <th class="wd-20p">القسط الشهري مع الفائدة (دينار)</th>
-                                    <th class="wd-20p">المبلغ المسدد (دينار)</th>
-                                    <th class="wd-20p">تاريخ العقد</th>
+                                    <th class="wd-5p">القسط الشهري مع الفائدة (دينار)</th>
+                                    <th class="wd-5p">المبلغ المسدد (دينار)</th>
+                                    <th class="wd-5p">تاريخ العقد</th>
                                     <th class="wd-20p">التسديد اقساط</th>
                                 </tr>
                             </thead>

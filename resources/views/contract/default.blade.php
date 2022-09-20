@@ -10,24 +10,18 @@
 
 <div class="side-app container-fluid">
 
-    <!-- page-header -->
-    <div class="page-header">
-        <div class="mr-auto">
-            <div class="input-group">
-                <a class="btn btn-primary ml-5 mt-4 mt-sm-0" href="{{ url('contract/create') }}"> إضافة <i class="fe fe-plus ml-1 mt-1"></i></a>
-            </div>
-        </div>
-    </div>
-    <!-- End page-header -->
-
 
     <!-- row -->
     <div class="row">
         <div class="col-md-12 col-lg-12">
             <div class="card">
-                <!-- <div class="card-header">
-                    <div class="card-title">جدول معلومات العقود</div>
-                </div> -->
+                <div class="card-header">
+                    <div class="mr-auto">
+                        <div class="input-group">
+                            <a class="btn btn-primary ml-5 mt-4 mt-sm-0" href="{{ url('contract/create') }}"> قرض <i class="fe fe-plus ml-1 mt-1"></i></a>
+                        </div>
+                    </div>
+                </div>
                 <div class="card-body">
                     <center>
                         @if(session()->has('success'))

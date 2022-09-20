@@ -82,7 +82,7 @@ class SuppliersCatchController extends Controller
 
             toast('تمت الإضافة بنجاح.','success');
             // $request->session()->flash('success', 'تمت الإضافة بنجاح.');
-            return redirect('suppliersCatch');
+            return redirect("suppliersCatch/$SuppliersCatch->id/print_catch");
 
         }
 
@@ -148,8 +148,10 @@ class SuppliersCatchController extends Controller
             DB::table('setting')->where('id','=', 1)->update($data);
 
             toast('تم التعديل بنجاح.','success');
+            return redirect("suppliersCatch/$SuppliersCatch->id/print_catch");
+
             // $request->session()->flash('success', 'تم التعديل بنجاح.');
-            return redirect('suppliersCatch');
+            //return redirect('suppliersCatch');
 
         }//else
             

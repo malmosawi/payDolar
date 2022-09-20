@@ -11,13 +11,13 @@
 <div class="side-app container">
 
     <!-- page-header -->
-    <div class="page-header">
-        <!-- <div class="mr-auto">
+    <!-- <div class="page-header">
+        <div class="mr-auto">
             <div class="input-group">
-                <a class="btn btn-primary ml-5 mt-4 mt-sm-0" href="{{ url('customers/create') }}"> إضافة زبون جديد <i class="fe fe-plus ml-1 mt-1"></i></a>
+                <a class="btn btn-primary ml-5 mt-4 mt-sm-0" href="{{ url('customers') }}"> عرض الزبائن <i class="fe fe-list ml-1 mt-1"></i></a>
             </div>
-        </div> -->
-    </div>
+        </div>
+    </div> -->
     <!-- End page-header -->
 
 
@@ -26,9 +26,13 @@
         <div class="col-md-12">
         
             <div class="card">
-                <!-- <div class="card-header">
-                    <h3 class="mb-0 card-title">إضافة معلومات زبون جديد</h3>
-                </div> -->
+                <div class="card-header">
+                    <div class="mr-auto">
+                        <div class="input-group">
+                            <a class="btn btn-primary ml-5 mt-4 mt-sm-0" href="{{ url('customers') }}"> عرض الزبائن <i class="fe fe-list ml-1 mt-1"></i></a>
+                        </div>
+                    </div>
+                </div>
                 <div class="card-body">
 
                     <center>
@@ -71,7 +75,7 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label class="form-label">رقم الهاتف</label>
+                                    <label class="form-label">رقم الهاتف (يتكون رقم الهاتف من 11 رقم)</label>
                                     <input type="text" class="form-control @error('phone') is-invalid state-invalid @enderror" name="phone" id="phone" value="{{ old('phone') }}" placeholder="">
                                 </div>
 
@@ -178,7 +182,7 @@
 
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label class="form-label">رقم هاتف المجلس البلدي</label>
+                                    <label class="form-label">رقم هاتف المجلس البلدي (يتكون رقم الهاتف من 11 رقم)</label>
                                     <input type="text" class="form-control @error('phone_council') is-invalid state-invalid @enderror" name="phone_council" id="phone_council" value="{{ old('phone_council') }}" placeholder="">
                                 </div>
                             </div>

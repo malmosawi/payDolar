@@ -113,8 +113,8 @@ class ContractController extends Controller
                 
                 toast('تمت الإضافة بنجاح.','success');
                 // $request->session()->flash('success', 'تمت الإضافة بنجاح.');
-                return redirect("contract");
-                //return redirect("contract/$contract->id/print_catch");
+                //return redirect("contract");
+                return redirect("contract/$contract->id/print_catch");
             }//else
 
         }
